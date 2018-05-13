@@ -5,6 +5,8 @@
  */
 package kp.ksl.compiler.types;
 
+import java.util.List;
+
 /**
  *
  * @author Asus
@@ -21,7 +23,7 @@ abstract class KSLPrimitive extends KSLType
     public final boolean isStruct() { return false; }
 
     @Override
-    public final boolean isObject() { return false; }
+    public final boolean isReference() { return false; }
     
     @Override
     public final short getDimension() { throw new UnsupportedOperationException(); }
@@ -31,6 +33,15 @@ abstract class KSLPrimitive extends KSLType
 
     @Override
     public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
+    
+    @Override
+    public final KSLStruct.KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+    
+    @Override
+    public final int getFieldCount() { throw new UnsupportedOperationException(); }
+    
+    @Override
+    public final List<KSLStruct.KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
     
     @Override
     public final boolean canCastTo(KSLType type)

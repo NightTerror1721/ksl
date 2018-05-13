@@ -39,7 +39,7 @@ final class Typeid
     
     public static final String CHAR = "c";
     
-    public static final String OBJECT = "o";
+    public static final String REFERENCE = "r";
     
     public static final boolean isNumeric(String typeid)
     {

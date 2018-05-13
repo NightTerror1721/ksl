@@ -5,6 +5,9 @@
  */
 package kp.ksl.compiler.types;
 
+import java.util.List;
+import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+
 /**
  *
  * @author Asus
@@ -66,7 +69,7 @@ public final class KSLArray extends KSLType
     public final boolean isStruct() { return false; }
 
     @Override
-    public final boolean isObject() { return false; }
+    public final boolean isReference() { return false; }
     
     @Override
     public final short getDimension() { return dimension; }
@@ -76,6 +79,15 @@ public final class KSLArray extends KSLType
     
     @Override
     public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
+    
+    @Override
+    public final KSLStruct.KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+    
+    @Override
+    public final int getFieldCount() { throw new UnsupportedOperationException(); }
+    
+    @Override
+    public final List<KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
     
     @Override
     public final boolean canCastTo(KSLType type) { return is(type); }
