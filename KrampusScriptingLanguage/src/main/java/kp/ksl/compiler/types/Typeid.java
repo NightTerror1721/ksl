@@ -5,6 +5,8 @@
  */
 package kp.ksl.compiler.types;
 
+import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+
 /**
  *
  * @author Asus
@@ -72,7 +74,7 @@ final class Typeid
         return PREFIX_ARRAY + baseType.typeid() + depth + SUFIX_END;
     }
     
-    public static final String generateStructTypeid(KSLType... types)
+    public static final String generateStructTypeid(KSLStructField... types)
     {
         if(types == null)
             throw new NullPointerException();
@@ -80,8 +82,8 @@ final class Typeid
             throw new IllegalArgumentException();
         StringBuilder sb = new StringBuilder(16);
         sb.append(PREFIX_STRUCT);
-        for(KSLType type : types)
-            sb.append(type.typeid());
+        for(KSLStructField type : types)
+            sb.append(type.getType().typeid());
         return sb.append(SUFIX_END).toString();
     }
 }

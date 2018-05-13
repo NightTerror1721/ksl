@@ -5,6 +5,7 @@
  */
 package kp.ksl.compiler.types;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,27 @@ public final class KSLStruct extends KSLType
     private final String name;
     private final HashMap<String, KSLStructField> fields;
     
+    private KSLStruct(KSLStructField[] fields)
+    {
+        this.typeid = Typeid.generateStructTypeid(fields);
+        this.name = generateName(fields);
+        this.fields = new HashMap<>();
+        for(KSLStructField field : fields)
+            this.fields.put(field.name, field);
+    }
+    
+    private static String generateName(KSLStructField[] fields)
+    {
+        StringBuilder sb = new StringBuilder("struct {");
+        if(fields.length > 0)
+        {
+            for(KSLStructField field : fields)
+                sb.append(field.getType()).append(" ").append(field.name).append("; ");
+            sb.delete(sb.length() - 2, sb.length());
+        }
+        return sb.append("}").toString();
+    }
+    
     @Override
     final String typeid() { return typeid; }
 
@@ -25,53 +47,37 @@ public final class KSLStruct extends KSLType
     public final String getName() { return name; }
 
     @Override
-    public boolean isPrimitive() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final boolean isPrimitive() { return false; }
 
     @Override
-    public boolean isArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final boolean isArray() { return false; }
 
     @Override
-    public boolean isStruct() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final boolean isStruct() { return true; }
 
     @Override
-    public boolean isReference() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final boolean isReference() { return false; }
 
     @Override
-    public short getDimension() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final short getDimension() { throw new UnsupportedOperationException(); }
 
     @Override
-    public KSLType getBaseType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final KSLType getBaseType() { throw new UnsupportedOperationException(); }
 
     @Override
-    public boolean canCastTo(KSLType type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isValidField(String field) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public final boolean isValidField(String field) { return fields.containsKey(field); }
     
     @Override
-    public final KSLStruct.KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+    public final KSLStructField getField(String field) { return fields.get(field); }
     
     @Override
-    public final int getFieldCount() { throw new UnsupportedOperationException(); }
+    public final int getFieldCount() { return fields.size(); }
     
     @Override
-    public final List<KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
+    public final List<KSLStructField> getAllFields() { return new ArrayList<>(fields.values()); }
+    
+    @Override
+    public final boolean canCastTo(KSLType type) { return is(type); }
     
     public static final class KSLStructField
     {
