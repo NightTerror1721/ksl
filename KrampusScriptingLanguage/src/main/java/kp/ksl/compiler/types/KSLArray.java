@@ -7,26 +7,22 @@ package kp.ksl.compiler.types;
 
 import java.util.List;
 import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import org.apache.bcel.generic.ArrayType;
 
 /**
  *
  * @author Asus
  */
 public final class KSLArray extends KSLType
-{
-    private static final String ARRAY_SYMBOL = "[]";
-    
-    private final String typeid;
-    private final String name;
+{   
     private final KSLType base;
     private final short dimension;
     
     private KSLArray(KSLType base, short dim)
     {
+        super(Typeid.arrayId(base, dim), Typename.arrayName(base, dim), new ArrayType(base.getJavaType(), dim));
         this.base = base;
         this.dimension = dim;
-        this.typeid = Typeid.generateArrayTypeid(base, dim);
-        this.name = generateName();
     }
     
     public static final KSLArray createArrayType(KSLType baseType, short dimension)
@@ -45,22 +41,14 @@ public final class KSLArray extends KSLType
         return new KSLArray(baseType, dimension);
     }
     
-    private String generateName()
-    {
-        StringBuilder sb = new StringBuilder(base.getName());
-        for(int i = 0; i < dimension; i++)
-            sb.append(ARRAY_SYMBOL);
-        return sb.toString();
-    }
-    
     @Override
-    final String typeid() { return typeid; }
-
-    @Override
-    public final String getName() { return name; }
+    public final boolean isMutable() { return true; }
 
     @Override
     public final boolean isPrimitive() { return false; }
+    
+    @Override
+    public final boolean isString() { return false; }
 
     @Override
     public final boolean isArray() { return true; }

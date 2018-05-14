@@ -3,16 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kp.ksl;
+package kp.ksl.compiler.exception;
 
 /**
  *
  * @author Asus
  */
-public final class Main
+public final class CompilationError extends Exception
 {
-    public static void main(String[] args)
-    {
-        System.out.println(Integer.TYPE);
-    }
+    public CompilationError(String errorMessage) { super(errorMessage); }
 }

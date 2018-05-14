@@ -5,15 +5,13 @@
  */
 package kp.ksl.compiler.types;
 
+import org.apache.bcel.generic.BasicType;
+
 /**
  *
  * @author Asus
  */
 public final class KSLSignedInt16 extends KSLPrimitive
 {
-    @Override
-    final String typeid() { return Typeid.SINT16; }
-
-    @Override
-    public final String getName() { return "signed short int"; }
+    public KSLSignedInt16() { super(Typeid.SINT16, Typename.integerName(Modifier.SIGNED_SHORT), BasicType.SHORT); }
 }

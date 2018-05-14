@@ -5,15 +5,13 @@
  */
 package kp.ksl.compiler.types;
 
+import org.apache.bcel.generic.BasicType;
+
 /**
  *
  * @author Asus
  */
 public final class KSLChar extends KSLPrimitive
 {
-    @Override
-    final String typeid() { return Typeid.CHAR; }
-
-    @Override
-    public final String getName() { return "char"; }
+    public KSLChar() { super(Typeid.CHARACTER, Typename.CHARACTER, BasicType.CHAR); }
 }

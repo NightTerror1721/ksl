@@ -6,24 +6,25 @@
 package kp.ksl.compiler.types;
 
 import java.util.List;
-import org.apache.bcel.generic.Type;
+import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import org.apache.bcel.generic.BasicType;
 
 /**
  *
  * @author Asus
  */
-abstract class KSLPrimitive extends KSLType
+public final class KSLString extends KSLType
 {
-    KSLPrimitive(String id, String name, Type javaType) { super(id, name, javaType); }
+    public KSLString() { super(Typeid.STRING, Typename.STRING, BasicType.STRING); }
     
     @Override
     public final boolean isMutable() { return false; }
+
+    @Override
+    public final boolean isPrimitive() { return false; }
     
     @Override
-    public final boolean isPrimitive() { return true; }
-    
-    @Override
-    public final boolean isString() { return false; }
+    public final boolean isString() { return true; }
 
     @Override
     public final boolean isArray() { return false; }
@@ -33,42 +34,26 @@ abstract class KSLPrimitive extends KSLType
 
     @Override
     public final boolean isReference() { return false; }
-    
+
     @Override
     public final short getDimension() { throw new UnsupportedOperationException(); }
-    
+
     @Override
     public final KSLType getBaseType() { throw new UnsupportedOperationException(); }
 
     @Override
     public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
-    
+
     @Override
-    public final KSLStruct.KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
-    
+    public final KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+
     @Override
     public final int getFieldCount() { throw new UnsupportedOperationException(); }
-    
+
     @Override
-    public final List<KSLStruct.KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
-    
+    public final List<KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
+
     @Override
-    public final boolean canCastTo(KSLType type)
-    {
-        switch(type.typeid())
-        {
-            case Typeid.SINT8:
-            case Typeid.SINT16:
-            case Typeid.SINT32:
-            case Typeid.SINT64:
-            case Typeid.UINT8:
-            case Typeid.UINT16:
-            case Typeid.UINT32:
-            case Typeid.FLOAT32:
-            case Typeid.FLOAT64:
-            case Typeid.CHARACTER:
-                return true;
-            default: return false;
-        }
-    }
+    public final boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }
+    
 }

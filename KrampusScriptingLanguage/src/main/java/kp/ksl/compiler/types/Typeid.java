@@ -5,6 +5,7 @@
  */
 package kp.ksl.compiler.types;
 
+import java.util.Collection;
 import kp.ksl.compiler.types.KSLStruct.KSLStructField;
 
 /**
@@ -18,6 +19,7 @@ final class Typeid
     public static final char PREFIX_SINT = 'i';
     public static final char PREFIX_UINT = 'u';
     public static final char PREFIX_FLOAT = 'f';
+    public static final char PREFIX_CHAR = 'c';
     public static final char PREFIX_ARRAY = 'a';
     public static final char PREFIX_STRUCT = 's';
     
@@ -39,7 +41,8 @@ final class Typeid
     public static final String FLOAT32 = "fi";
     public static final String FLOAT64 = "fl";
     
-    public static final String CHAR = "c";
+    public static final String CHARACTER = "cb";
+    public static final String STRING = "cs";
     
     public static final String REFERENCE = "r";
     
@@ -67,18 +70,21 @@ final class Typeid
     
     public static final boolean isFloat(String typeid) { return typeid.length() == 2 && typeid.charAt(0) == PREFIX_FLOAT; }
     
-    public static final String generateArrayTypeid(KSLType baseType, short depth)
+    public static final boolean isCharacter(String typeid) { return typeid.equals(CHARACTER); }
+    public static final boolean isString(String typeid) { return typeid.equals(STRING); }
+    
+    public static final String arrayId(KSLType baseType, short depth)
     {
         if(depth < 1)
             throw new IllegalArgumentException();
         return PREFIX_ARRAY + baseType.typeid() + depth + SUFIX_END;
     }
     
-    public static final String generateStructTypeid(KSLStructField... types)
+    public static final String structId(Collection<KSLStructField> types)
     {
         if(types == null)
             throw new NullPointerException();
-        if(types.length < 1)
+        if(types.isEmpty())
             throw new IllegalArgumentException();
         StringBuilder sb = new StringBuilder(16);
         sb.append(PREFIX_STRUCT);

@@ -5,15 +5,14 @@
  */
 package kp.ksl.compiler.types;
 
+import kp.ksl.lang.UnsignedShortInteger;
+import org.apache.bcel.generic.ObjectType;
+
 /**
  *
  * @author Asus
  */
 public final class KSLUnsignedInt16 extends KSLPrimitive
 {
-    @Override
-    final String typeid() { return Typeid.UINT16; }
-
-    @Override
-    public final String getName() { return "unsigned short int"; }
+    public KSLUnsignedInt16() { super(Typeid.UINT16, Typename.integerName(Modifier.UNSIGNED_SHORT), new ObjectType(UnsignedShortInteger.class.getName())); }
 }

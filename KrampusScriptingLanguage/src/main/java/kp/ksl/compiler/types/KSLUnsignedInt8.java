@@ -5,15 +5,14 @@
  */
 package kp.ksl.compiler.types;
 
+import kp.ksl.lang.UnsignedByteInteger;
+import org.apache.bcel.generic.ObjectType;
+
 /**
  *
  * @author Asus
  */
 public final class KSLUnsignedInt8 extends KSLPrimitive
 {
-    @Override
-    final String typeid() { return Typeid.UINT8; }
-
-    @Override
-    public final String getName() { return "unsigned byte"; }
+    public KSLUnsignedInt8() { super(Typeid.UINT8, Typename.integerName(Modifier.UNSIGNED_BYTE), new ObjectType(UnsignedByteInteger.class.getName())); }
 }

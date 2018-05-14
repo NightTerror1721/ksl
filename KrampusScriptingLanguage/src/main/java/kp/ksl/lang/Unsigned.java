@@ -3,16 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kp.ksl;
+package kp.ksl.lang;
 
 /**
  *
  * @author Asus
  */
-public final class Main
+public abstract class Unsigned extends Number implements Comparable<Number>
 {
-    public static void main(String[] args)
-    {
-        System.out.println(Integer.TYPE);
-    }
+    
 }

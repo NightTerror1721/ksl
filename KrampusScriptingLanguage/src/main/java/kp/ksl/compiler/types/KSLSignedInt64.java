@@ -5,15 +5,13 @@
  */
 package kp.ksl.compiler.types;
 
+import org.apache.bcel.generic.BasicType;
+
 /**
  *
  * @author Asus
  */
 public final class KSLSignedInt64 extends KSLPrimitive
 {
-    @Override
-    final String typeid() { return Typeid.SINT64; }
-
-    @Override
-    public final String getName() { return "signed long int"; }
+    public KSLSignedInt64() { super(Typeid.SINT64, Typename.integerName(Modifier.SIGNED_LONG), BasicType.LONG); }
 }

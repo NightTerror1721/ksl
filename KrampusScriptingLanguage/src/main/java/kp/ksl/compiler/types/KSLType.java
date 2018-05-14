@@ -8,6 +8,7 @@ package kp.ksl.compiler.types;
 import java.util.List;
 import java.util.Objects;
 import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import org.apache.bcel.generic.Type;
 
 /**
  *
@@ -15,10 +16,31 @@ import kp.ksl.compiler.types.KSLStruct.KSLStructField;
  */
 public abstract class KSLType
 {
-    abstract String typeid();
-    public abstract String getName();
+    protected final String id;
+    protected final String name;
+    protected final Type jtype;
+    
+    KSLType(String id, String name, Type javaType)
+    {
+        if(id == null)
+            throw new NullPointerException();
+        if(name == null)
+            throw new NullPointerException();
+        if(javaType == null)
+            throw new NullPointerException();
+        this.id = id;
+        this.name = name;
+        this.jtype = javaType;
+    }
+    
+    final String typeid() { return id; }
+    public final String getName() { return name; }
+    public final Type getJavaType() { return jtype; }
+    
+    public abstract boolean isMutable();
     
     public abstract boolean isPrimitive();
+    public abstract boolean isString();
     public abstract boolean isArray();
     public abstract boolean isStruct();
     public abstract boolean isReference();

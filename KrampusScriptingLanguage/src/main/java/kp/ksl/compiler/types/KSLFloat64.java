@@ -5,15 +5,13 @@
  */
 package kp.ksl.compiler.types;
 
+import org.apache.bcel.generic.BasicType;
+
 /**
  *
  * @author Asus
  */
 public final class KSLFloat64 extends KSLPrimitive
 {
-    @Override
-    final String typeid() { return Typeid.FLOAT64; }
-
-    @Override
-    public final String getName() { return "double"; }
+    public KSLFloat64() { super(Typeid.FLOAT64, Typename.floatName(Modifier.SIGNED_LONG), BasicType.DOUBLE); }
 }

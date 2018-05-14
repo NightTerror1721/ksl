@@ -8,6 +8,8 @@ package kp.ksl.compiler.types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import kp.ksl.compiler.parser.Identifier;
+import org.apache.bcel.generic.Type;
 
 /**
  *
@@ -15,39 +17,22 @@ import java.util.List;
  */
 public final class KSLStruct extends KSLType
 {
-    private final String typeid;
-    private final String name;
     private final HashMap<String, KSLStructField> fields;
     
-    private KSLStruct(KSLStructField[] fields)
+    private KSLStruct(HashMap<String, KSLStructField> fields, Type type)
     {
-        this.typeid = Typeid.generateStructTypeid(fields);
-        this.name = generateName(fields);
-        this.fields = new HashMap<>();
-        for(KSLStructField field : fields)
-            this.fields.put(field.name, field);
-    }
-    
-    private static String generateName(KSLStructField[] fields)
-    {
-        StringBuilder sb = new StringBuilder("struct {");
-        if(fields.length > 0)
-        {
-            for(KSLStructField field : fields)
-                sb.append(field.getType()).append(" ").append(field.name).append("; ");
-            sb.delete(sb.length() - 2, sb.length());
-        }
-        return sb.append("}").toString();
+        super(Typeid.structId(fields.values()), Typename.structName(fields.values()), type);
+        this.fields = new HashMap<>(fields);
     }
     
     @Override
-    final String typeid() { return typeid; }
-
-    @Override
-    public final String getName() { return name; }
+    public final boolean isMutable() { return true; }
 
     @Override
     public final boolean isPrimitive() { return false; }
+    
+    @Override
+    public final boolean isString() { return false; }
 
     @Override
     public final boolean isArray() { return false; }
@@ -92,5 +77,25 @@ public final class KSLStruct extends KSLType
         
         public final String getName() { return name; }
         public final KSLType getType() { return type; }
+    }
+    
+    public static final class KSLStructBuilder
+    {
+        private final HashMap<String, KSLStructField> fields = new HashMap<>();
+        
+        private KSLStructBuilder() {}
+        
+        public final KSLStructBuilder addField(String name, KSLType type)
+        {
+            if(!Identifier.isValidIdentifier(name))
+                throw new IllegalArgumentException();
+            if(type == null)
+                throw new NullPointerException();
+            KSLStructField field = new KSLStructField(name, type);
+            fields.put(name, field);
+            return this;
+        }
+        
+        public final KSLStruct build(Type type) { return new KSLStruct(fields, type); }
     }
 }
