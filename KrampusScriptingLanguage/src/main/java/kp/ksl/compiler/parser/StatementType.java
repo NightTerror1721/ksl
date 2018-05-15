@@ -14,10 +14,8 @@ public enum StatementType
     IDENTIFIER,
     LITERAL,
     FUNCTION_CALL,
-    PARENTHESIS,
-    SQUARE,
     ARGUMENT_LIST,
     OPERATOR,
     OPERATOR_SYMBOL,
-    STOP_CHAR
+    STOPCHAR
 }

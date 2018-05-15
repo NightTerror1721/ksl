@@ -3,13 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kp.ksl.lang;
+package kp.ksl.compiler.parser;
 
 /**
  *
  * @author Asus
  */
-abstract class Unsigned extends Number implements Comparable<Number>
+public final class StatementParser
 {
+    private StatementParser() {}
     
+    public static final Statement parse(UnparsedStatementList list)
+    {
+        return null;
+    }
 }
