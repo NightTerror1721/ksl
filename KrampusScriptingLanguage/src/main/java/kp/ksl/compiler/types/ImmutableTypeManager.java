@@ -50,6 +50,7 @@ public final class ImmutableTypeManager
     {
         switch(name)
         {
+            case Typename.VOID: return VOID;
             case Typename.INTEGER: return SIGNED_INT;
             case Typename.FLOAT: return SIGNED_FLOAT;
             case Typename.CHARACTER: return CHAR;

@@ -16,6 +16,7 @@ final class Typeid
 {
     private Typeid() {}
     
+    public static final char PREFIX_VOID = 'v';
     public static final char PREFIX_SINT = 'i';
     public static final char PREFIX_UINT = 'u';
     public static final char PREFIX_FLOAT = 'f';
@@ -28,6 +29,8 @@ final class Typeid
     public static final char SUFIX_4BYTE = 'i';
     public static final char SUFIX_8BYTE = 'l';
     public static final char SUFIX_END = ';';
+    
+    public static final String VOID = "v";
     
     public static final String SINT8 = "ib";
     public static final String SINT16 = "is";
@@ -45,6 +48,8 @@ final class Typeid
     public static final String STRING = "cs";
     
     public static final String REFERENCE = "r";
+    
+    public static final boolean isVoid(String typeid) { return typeid.equals(VOID); }
     
     public static final boolean isNumeric(String typeid)
     {

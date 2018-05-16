@@ -9,7 +9,7 @@ package kp.ksl.compiler.parser;
  *
  * @author Asus
  */
-public final class Stopchar implements UnparsedStatement
+public final class Stopchar extends UnparsedStatement
 {
     private final String symbol;
     

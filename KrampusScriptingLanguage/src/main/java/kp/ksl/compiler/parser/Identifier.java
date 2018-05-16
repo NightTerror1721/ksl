@@ -12,7 +12,7 @@ import kp.ksl.compiler.exception.CompilationError;
  *
  * @author Asus
  */
-public final class Identifier implements UnparsedStatement, Statement
+public final class Identifier extends Statement
 {
     private final String identifier;
     
@@ -20,9 +20,6 @@ public final class Identifier implements UnparsedStatement, Statement
     {
         this.identifier = identifier;
     }
-    
-    @Override
-    public final boolean isValidOperand() { return true; }
 
     @Override
     public final StatementType getStatementType() { return StatementType.IDENTIFIER; }

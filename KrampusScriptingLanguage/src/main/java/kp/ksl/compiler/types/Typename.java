@@ -16,6 +16,7 @@ final class Typename
 {
     private Typename() {}
     
+    public static final String VOID = "void";
     public static final String INTEGER = "int";
     public static final String FLOAT = "float";
     public static final String CHARACTER = "char";

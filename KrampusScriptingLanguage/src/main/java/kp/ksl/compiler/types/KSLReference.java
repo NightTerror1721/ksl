@@ -34,6 +34,9 @@ public final class KSLReference extends KSLType
 
     @Override
     public final boolean isReference() { return true; }
+    
+    @Override
+    public final boolean isVoid() { return false; }
 
     @Override
     public final short getDimension() { throw new UnsupportedOperationException(); }

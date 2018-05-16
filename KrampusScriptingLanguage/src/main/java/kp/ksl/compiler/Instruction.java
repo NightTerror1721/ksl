@@ -3,17 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kp.ksl.compiler.parser;
+package kp.ksl.compiler;
 
 /**
  *
  * @author Asus
  */
-public enum StatementType
+public class Instruction
 {
-    IDENTIFIER,
-    LITERAL,
-    OPERATOR,
-    OPERATION,
-    STOPCHAR;
+    
 }

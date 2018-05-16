@@ -13,6 +13,8 @@ public final class NativeType
 {
     private NativeType() {}
     
+    public static final KSLType VOID = new KSLVoid();
+    
     public static final KSLType SIGNED_BYTE_INT = new KSLSignedInt8();
     public static final KSLType SIGNED_SHORT_INT = new KSLSignedInt16();
     public static final KSLType SIGNED_INT = new KSLSignedInt32();

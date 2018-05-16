@@ -34,6 +34,9 @@ public final class KSLString extends KSLType
 
     @Override
     public final boolean isReference() { return false; }
+    
+    @Override
+    public final boolean isVoid() { return false; }
 
     @Override
     public final short getDimension() { throw new UnsupportedOperationException(); }

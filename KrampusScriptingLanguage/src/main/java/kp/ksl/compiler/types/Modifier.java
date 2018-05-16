@@ -5,13 +5,15 @@
  */
 package kp.ksl.compiler.types;
 
+import kp.ksl.compiler.InstructionCode;
+import kp.ksl.compiler.InstructionCodeType;
 import kp.ksl.compiler.exception.CompilationError;
 
 /**
  *
  * @author Asus
  */
-public final class Modifier
+public final class Modifier implements InstructionCode
 {
     private final int id;
     
@@ -141,4 +143,7 @@ public final class Modifier
             default: return "<undefined-modifier>";
         }
     }
+    
+    @Override
+    public final InstructionCodeType getInstructionCodeType() { return InstructionCodeType.TYPE_MODIFIER; }
 }

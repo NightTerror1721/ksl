@@ -9,7 +9,11 @@ package kp.ksl.compiler.parser;
  *
  * @author Asus
  */
-public interface Statement extends BaseStatement
+public abstract class Statement extends UnparsedStatement
 {
+    @Override
+    public final boolean isValidOperand() { return true; }
     
+    @Override
+    public final boolean isParsedStatement() { return true; }
 }

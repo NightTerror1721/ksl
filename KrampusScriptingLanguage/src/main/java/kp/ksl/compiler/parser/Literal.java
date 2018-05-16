@@ -18,7 +18,7 @@ import kp.ksl.lang.UnsignedShortInteger;
  *
  * @author Asus
  */
-public final class Literal implements UnparsedStatement, Statement
+public final class Literal extends Statement
 {
     private final LiteralType type;
     private final Object value;
@@ -44,9 +44,6 @@ public final class Literal implements UnparsedStatement, Statement
     public final double float64() { return (double) value; }
     public final char character() { return (char) value; }
     public final String string() { return (String) value; }
-
-    @Override
-    public final boolean isValidOperand() { return true; }
 
     @Override
     public final StatementType getStatementType() { return StatementType.LITERAL; }

@@ -5,11 +5,13 @@
  */
 package kp.ksl.compiler.parser;
 
+import kp.ksl.compiler.exception.CompilationError;
+
 /**
  *
  * @author Asus
  */
-public final class FunctionCall implements UnparsedStatement, Statement
+public final class FunctionCall extends Operation
 {
     private final Identifier identifier;
     private final Statement[] arguments;
@@ -29,7 +31,7 @@ public final class FunctionCall implements UnparsedStatement, Statement
         return new FunctionCall(name, args);
     }
     
-    public static final FunctionCall createCall(Identifier name, UnparsedStatementList argsList)
+    public static final FunctionCall createCall(Identifier name, UnparsedStatementList argsList) throws CompilationError
     {
         if(argsList.isEmpty())
             return createCall(name);
@@ -39,11 +41,19 @@ public final class FunctionCall implements UnparsedStatement, Statement
             args[i] = StatementParser.parse(uargs[i]);
         return createCall(name, args);
     }
+    
+    public final Identifier getName() { return identifier; }
+    
+    public final int getArgumentsCount() { return arguments.length; }
+    public final Statement gerArgument(int index) { return arguments[index]; }
 
     @Override
-    public final boolean isValidOperand() { return true; }
+    public Operator getOperator() { return Operator.FUNCTION_CALL; }
 
     @Override
-    public final StatementType getStatementType() { return StatementType.FUNCTION_CALL; }
+    public Statement getOperand(int index)
+    {
+        return index == 0 ? identifier : arguments[index - 1];
+    }
     
 }

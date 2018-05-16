@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kp.ksl.compiler.parser;
+package kp.ksl.compiler;
 
 /**
  *
  * @author Asus
  */
-public interface BaseStatement
+public final class IdentifierPool
 {
-    StatementType getStatementType();
+    //private final HashMap<String, typeid>
 }

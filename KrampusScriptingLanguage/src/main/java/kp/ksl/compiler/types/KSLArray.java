@@ -60,6 +60,9 @@ public final class KSLArray extends KSLType
     public final boolean isReference() { return false; }
     
     @Override
+    public final boolean isVoid() { return false; }
+    
+    @Override
     public final short getDimension() { return dimension; }
     
     @Override

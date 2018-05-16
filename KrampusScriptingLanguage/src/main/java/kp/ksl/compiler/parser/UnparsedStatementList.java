@@ -47,7 +47,7 @@ public final class UnparsedStatementList
         this.code[index] = code;
     }
     
-    public final <UO extends UnparsedStatement> UO get(int index) { return (UO) code[index]; }
+    public final <US extends UnparsedStatement> US get(int index) { return (US) code[index]; }
     
     public final UnparsedStatementList subList(int offset, int length) { return new UnparsedStatementList(sourceLine, code, offset, length, false); }
     public final UnparsedStatementList subList(int offset) { return subList(offset, code.length - offset); }
@@ -231,6 +231,9 @@ public final class UnparsedStatementList
         return parts.toArray(new UnparsedStatementList[parts.size()]);
     }
     
+    final Pointer counter() { return new Pointer(); }
+    final Pointer counter(int initialValue) { return new Pointer(initialValue); }
+    
     @Override
     public final String toString() { return Arrays.toString(code); }
     
@@ -263,4 +266,29 @@ public final class UnparsedStatementList
     
     @FunctionalInterface
     public interface Mapper<I, O> { O map(I input) throws CompilationError; }
+    
+    
+    final class Pointer
+    {
+        private int value;
+        private final int limit;
+        
+        private Pointer(int initialValue)
+        {
+            this.value = initialValue;
+            this.limit = code.length;
+        }
+        private Pointer() { this(0); }
+        
+        public final UnparsedStatementList list() { return UnparsedStatementList.this; }
+        public final int increase(int times) { return value += times; }
+        public final int increase() { return increase(1); }
+        public final int decrease(int times) { return value -= times; }
+        public final int decrease() { return decrease(1); }
+        public final int value() { return value; }
+        public final int finish() { return value = limit; }
+        public final boolean end() { return value >= limit; }
+        
+        public final <US extends UnparsedStatement> US listValue() { return (US) code[value]; }
+    }
 }

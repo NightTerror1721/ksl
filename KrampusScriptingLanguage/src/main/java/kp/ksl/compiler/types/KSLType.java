@@ -7,6 +7,8 @@ package kp.ksl.compiler.types;
 
 import java.util.List;
 import java.util.Objects;
+import kp.ksl.compiler.InstructionCode;
+import kp.ksl.compiler.InstructionCodeType;
 import kp.ksl.compiler.types.KSLStruct.KSLStructField;
 import org.apache.bcel.generic.Type;
 
@@ -14,7 +16,7 @@ import org.apache.bcel.generic.Type;
  *
  * @author Asus
  */
-public abstract class KSLType
+public abstract class KSLType implements InstructionCode
 {
     protected final String id;
     protected final String name;
@@ -44,6 +46,7 @@ public abstract class KSLType
     public abstract boolean isArray();
     public abstract boolean isStruct();
     public abstract boolean isReference();
+    public abstract boolean isVoid();
     
     /* For Array */
     public abstract short getDimension();
@@ -78,4 +81,7 @@ public abstract class KSLType
     
     @Override
     public final String toString() { return getName(); }
+    
+    @Override
+    public final InstructionCodeType getInstructionCodeType() { return InstructionCodeType.TYPE; }
 }
