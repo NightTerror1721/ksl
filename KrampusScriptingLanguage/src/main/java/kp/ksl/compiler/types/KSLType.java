@@ -63,6 +63,8 @@ public abstract class KSLType implements InstructionCode
     
     /* Other */
     
+    public boolean requireDoubleStackEntry() { return false; }
+    
     public final boolean equals(KSLType other) { return this == other || typeid().equals(other.typeid()); }
     
     public final boolean is(KSLType other) { return this == other || typeid().equals(other.typeid()); }

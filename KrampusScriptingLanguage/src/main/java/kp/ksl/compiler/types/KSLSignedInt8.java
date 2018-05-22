@@ -13,5 +13,5 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLSignedInt8 extends KSLPrimitive
 {
-    public KSLSignedInt8() { super(Typeid.SINT8, Typename.integerName(Modifier.SIGNED_BYTE), BasicType.BYTE); }
+    public KSLSignedInt8() { super(Typeid.SINT8, Typename.integerName(TypeModifier.SIGNED_BYTE), BasicType.BYTE); }
 }

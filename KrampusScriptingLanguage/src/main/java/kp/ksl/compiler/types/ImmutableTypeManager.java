@@ -14,13 +14,13 @@ import static kp.ksl.compiler.types.NativeType.*;
  */
 public final class ImmutableTypeManager
 {
-    public static final KSLType getType(Modifier mod) throws CompilationError
+    public static final KSLType getType(TypeModifier mod) throws CompilationError
     {
         switch(mod.getByteCount())
         {
-            case Modifier.BYTES_BYTE: return mod.isUnsigned() ? UNSIGNED_BYTE_INT : SIGNED_BYTE_INT;
-            case Modifier.BYTES_SHORT: return mod.isUnsigned() ? UNSIGNED_SHORT_INT : SIGNED_SHORT_INT;
-            case Modifier.BYTES_LONG:
+            case TypeModifier.BYTES_BYTE: return mod.isUnsigned() ? UNSIGNED_BYTE_INT : SIGNED_BYTE_INT;
+            case TypeModifier.BYTES_SHORT: return mod.isUnsigned() ? UNSIGNED_SHORT_INT : SIGNED_SHORT_INT;
+            case TypeModifier.BYTES_LONG:
                 if(mod.isUnsigned())
                     throw new CompilationError("Invalid type: " + mod);
                 return SIGNED_LONG_INT;
@@ -28,7 +28,7 @@ public final class ImmutableTypeManager
         }
     }
     
-    public static final KSLType getType(Modifier mod, String name) throws CompilationError
+    public static final KSLType getType(TypeModifier mod, String name) throws CompilationError
     {
         switch(name)
         {

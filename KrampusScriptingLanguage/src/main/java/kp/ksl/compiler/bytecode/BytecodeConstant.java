@@ -3,18 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kp.ksl.compiler;
+package kp.ksl.compiler.bytecode;
 
 /**
  *
  * @author Asus
  */
-public enum InstructionCodeType
+public final class BytecodeConstant
 {
-    ID,
-    TYPE,
-    TYPE_MODIFIER,
-    VARIABLE_MODIFIER,
-    STATEMENT,
-    END;
+    
 }

@@ -13,11 +13,11 @@ import kp.ksl.compiler.exception.CompilationError;
  *
  * @author Asus
  */
-public final class Modifier implements InstructionCode
+public final class TypeModifier implements InstructionCode
 {
     private final int id;
     
-    private Modifier(int id) { this.id = id; }
+    private TypeModifier(int id) { this.id = id; }
     
     public final boolean isUnsigned() { return (id & ID_UNSIGNED) == ID_UNSIGNED; }
     public final boolean isByte() { return (id & ID_BYTE) == ID_BYTE; }
@@ -48,16 +48,16 @@ public final class Modifier implements InstructionCode
     public static final int BYTES_LONG = 8;
     
     
-    public static final Modifier SIGNED = new Modifier(ID_SIGNED);
-    public static final Modifier UNSIGNED = new Modifier(ID_UNSIGNED);
-    public static final Modifier BYTE = new Modifier(ID_BYTE);
-    public static final Modifier SHORT = new Modifier(ID_SHORT);
-    public static final Modifier LONG = new Modifier(ID_LONG);
-    public static final Modifier SIGNED_BYTE = new Modifier(ID_SIGNED_BYTE);
-    public static final Modifier SIGNED_SHORT = new Modifier(ID_SIGNED_SHORT);
-    public static final Modifier SIGNED_LONG = new Modifier(ID_SIGNED_LONG);
-    public static final Modifier UNSIGNED_BYTE = new Modifier(ID_UNSIGNED_BYTE);
-    public static final Modifier UNSIGNED_SHORT = new Modifier(ID_UNSIGNED_SHORT);
+    public static final TypeModifier SIGNED = new TypeModifier(ID_SIGNED);
+    public static final TypeModifier UNSIGNED = new TypeModifier(ID_UNSIGNED);
+    public static final TypeModifier BYTE = new TypeModifier(ID_BYTE);
+    public static final TypeModifier SHORT = new TypeModifier(ID_SHORT);
+    public static final TypeModifier LONG = new TypeModifier(ID_LONG);
+    public static final TypeModifier SIGNED_BYTE = new TypeModifier(ID_SIGNED_BYTE);
+    public static final TypeModifier SIGNED_SHORT = new TypeModifier(ID_SIGNED_SHORT);
+    public static final TypeModifier SIGNED_LONG = new TypeModifier(ID_SIGNED_LONG);
+    public static final TypeModifier UNSIGNED_BYTE = new TypeModifier(ID_UNSIGNED_BYTE);
+    public static final TypeModifier UNSIGNED_SHORT = new TypeModifier(ID_UNSIGNED_SHORT);
     
     public static final boolean isValidModifier(String str)
     {
@@ -73,7 +73,7 @@ public final class Modifier implements InstructionCode
         }
     }
     
-    public static final Modifier valueOf(String str) throws CompilationError
+    public static final TypeModifier valueOf(String str) throws CompilationError
     {
         switch(str)
         {
@@ -86,7 +86,7 @@ public final class Modifier implements InstructionCode
         }
     }
     
-    public static final Modifier join(Modifier m1, Modifier m2) throws CompilationError
+    public static final TypeModifier join(TypeModifier m1, TypeModifier m2) throws CompilationError
     {
         switch(m1.id)
         {

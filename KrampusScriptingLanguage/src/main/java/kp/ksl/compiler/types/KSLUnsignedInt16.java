@@ -14,5 +14,5 @@ import org.apache.bcel.generic.ObjectType;
  */
 public final class KSLUnsignedInt16 extends KSLPrimitive
 {
-    public KSLUnsignedInt16() { super(Typeid.UINT16, Typename.integerName(Modifier.UNSIGNED_SHORT), new ObjectType(UnsignedShortInteger.class.getName())); }
+    public KSLUnsignedInt16() { super(Typeid.UINT16, Typename.integerName(TypeModifier.UNSIGNED_SHORT), new ObjectType(UnsignedShortInteger.class.getName())); }
 }

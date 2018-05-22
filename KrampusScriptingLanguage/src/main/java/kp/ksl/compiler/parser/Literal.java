@@ -8,7 +8,7 @@ package kp.ksl.compiler.parser;
 import java.util.regex.Pattern;
 import kp.ksl.compiler.exception.CompilationError;
 import kp.ksl.compiler.types.KSLType;
-import kp.ksl.compiler.types.Modifier;
+import kp.ksl.compiler.types.TypeModifier;
 import kp.ksl.compiler.types.NativeType;
 import kp.ksl.lang.UnsignedByteInteger;
 import kp.ksl.lang.UnsignedInteger;
@@ -100,10 +100,10 @@ public final class Literal extends Statement
         char c = str.charAt(str.length() - (unsigned ? -2 : -1));
         switch(c)
         {
-            case 'b': case 'B': return Modifier.BYTES_BYTE;
-            case 's': case 'S': return Modifier.BYTES_SHORT;
-            case 'l': case 'L': return Modifier.BYTES_LONG;
-            default: return Modifier.BYTES_NORMAL;
+            case 'b': case 'B': return TypeModifier.BYTES_BYTE;
+            case 's': case 'S': return TypeModifier.BYTES_SHORT;
+            case 'l': case 'L': return TypeModifier.BYTES_LONG;
+            default: return TypeModifier.BYTES_NORMAL;
         }
     }
     private static Literal decodeInteger(String str) throws CompilationError
@@ -112,20 +112,20 @@ public final class Literal extends Statement
         int base = base(str);
         int bytes = integerLen(str, unsigned);
         int start = base == 8 ? 1 : base == 16 ? 2 : 0;
-        int end = str.length() - ((unsigned ? 1 : 0) + (bytes != Modifier.BYTES_NORMAL ? 1 : 0));
+        int end = str.length() - ((unsigned ? 1 : 0) + (bytes != TypeModifier.BYTES_NORMAL ? 1 : 0));
         str = str.substring(start, end);
         
         try
         {
             switch(bytes)
             {
-                case Modifier.BYTES_BYTE: return unsigned
+                case TypeModifier.BYTES_BYTE: return unsigned
                         ? sint8(Byte.parseByte(str, base))
                         : uint8(Short.parseShort(str, base));
-                case Modifier.BYTES_SHORT: return unsigned
+                case TypeModifier.BYTES_SHORT: return unsigned
                         ? sint16(Short.parseShort(str, base))
                         : uint16(Integer.parseInt(str, base));
-                case Modifier.BYTES_LONG: return sint64(Long.parseLong(str, base));
+                case TypeModifier.BYTES_LONG: return sint64(Long.parseLong(str, base));
                 default: return unsigned
                         ? sint32(Integer.parseInt(str, base))
                         : uint32(Long.parseLong(str, base));

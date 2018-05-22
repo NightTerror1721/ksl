@@ -13,5 +13,5 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLFloat32 extends KSLPrimitive
 {
-    public KSLFloat32() { super(Typeid.FLOAT32, Typename.floatName(Modifier.SIGNED), BasicType.FLOAT); }
+    public KSLFloat32() { super(Typeid.FLOAT32, Typename.floatName(TypeModifier.SIGNED), BasicType.FLOAT); }
 }

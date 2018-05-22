@@ -25,12 +25,12 @@ final class Typename
     
     private static final String ARRAY_SYMBOL = "[]";
     
-    public static final String integerName(Modifier mod)
+    public static final String integerName(TypeModifier mod)
     {
         return mod == null ? INTEGER : mod + " " + INTEGER;
     }
     
-    public static final String floatName(Modifier mod)
+    public static final String floatName(TypeModifier mod)
     {
         if(mod == null)
             return FLOAT;
