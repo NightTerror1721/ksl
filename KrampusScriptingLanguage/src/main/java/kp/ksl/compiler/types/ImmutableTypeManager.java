@@ -5,6 +5,7 @@
  */
 package kp.ksl.compiler.types;
 
+import java.util.HashMap;
 import kp.ksl.compiler.exception.CompilationError;
 import static kp.ksl.compiler.types.NativeType.*;
 
@@ -53,10 +54,35 @@ public final class ImmutableTypeManager
             case Typename.VOID: return VOID;
             case Typename.INTEGER: return SIGNED_INT;
             case Typename.FLOAT: return SIGNED_FLOAT;
+            case Typename.BOOLEAN: return BOOL;
             case Typename.CHARACTER: return CHAR;
             case Typename.STRING: return STRING;
             case Typename.REFERENCE: return REF;
             default: throw new CompilationError("Invalid type: " + name);
         }
+    }
+    
+    private static final HashMap<Class<?>, KSLType> NATIVE_BINDS;
+    static {
+        NATIVE_BINDS = new HashMap<>();
+        NATIVE_BINDS.put(VOID.getJavaClass(), VOID);
+        NATIVE_BINDS.put(SIGNED_BYTE_INT.getJavaClass(), SIGNED_BYTE_INT);
+        NATIVE_BINDS.put(SIGNED_SHORT_INT.getJavaClass(), SIGNED_SHORT_INT);
+        NATIVE_BINDS.put(SIGNED_INT.getJavaClass(), SIGNED_INT);
+        NATIVE_BINDS.put(SIGNED_LONG_INT.getJavaClass(), SIGNED_LONG_INT);
+        NATIVE_BINDS.put(UNSIGNED_BYTE_INT.getJavaClass(), UNSIGNED_BYTE_INT);
+        NATIVE_BINDS.put(UNSIGNED_SHORT_INT.getJavaClass(), UNSIGNED_SHORT_INT);
+        NATIVE_BINDS.put(UNSIGNED_INT.getJavaClass(), UNSIGNED_INT);
+        NATIVE_BINDS.put(SIGNED_FLOAT.getJavaClass(), SIGNED_FLOAT);
+        NATIVE_BINDS.put(SIGNED_LONG_FLOAT.getJavaClass(), SIGNED_LONG_FLOAT);
+        NATIVE_BINDS.put(BOOL.getJavaClass(), BOOL);
+        NATIVE_BINDS.put(CHAR.getJavaClass(), CHAR);
+        NATIVE_BINDS.put(STRING.getJavaClass(), STRING);
+        NATIVE_BINDS.put(REF.getJavaClass(), REF);
+    }
+    
+    public static final KSLType getTypeIfExists(Class<?> jclass)
+    {
+        return NATIVE_BINDS.getOrDefault(jclass, null);
     }
 }

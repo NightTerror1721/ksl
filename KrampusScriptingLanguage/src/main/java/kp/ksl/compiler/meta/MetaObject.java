@@ -5,8 +5,7 @@
  */
 package kp.ksl.compiler.meta;
 
-import java.util.Objects;
-import org.apache.bcel.generic.Type;
+import kp.ksl.compiler.types.KSLType;
 
 /**
  *
@@ -14,9 +13,7 @@ import org.apache.bcel.generic.Type;
  */
 public abstract class MetaObject
 {
-    protected final Type typeOwner;
+    MetaObject() {}
     
-    MetaObject(Type typeOwner) { this.typeOwner = Objects.requireNonNull(typeOwner); }
-    
-    public final Type getTypeOwner() { return typeOwner; }
+    public abstract KSLType getTypeOwner();
 }

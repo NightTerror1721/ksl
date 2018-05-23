@@ -11,6 +11,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import kp.ksl.compiler.meta.MetaClass;
+import kp.ksl.compiler.types.ImmutableTypeManager;
+import kp.ksl.compiler.types.KSLArray;
+import kp.ksl.compiler.types.KSLType;
+import kp.ksl.compiler.types.Typename;
 
 /**
  *
@@ -18,7 +22,8 @@ import kp.ksl.compiler.meta.MetaClass;
  */
 public class KSLClassLoader extends ClassLoader
 {
-    private final HashMap<String, MetaClass<?>> cache = new HashMap<>();
+    private final HashMap<String, MetaClass> scache = new HashMap<>();
+    private final HashMap<Class<?>, MetaClass> ccache = new HashMap<>();
     private final KSLClassLoader kslParent;
     private final File[] roots;
     
@@ -35,29 +40,82 @@ public class KSLClassLoader extends ClassLoader
     public KSLClassLoader(File[] files)
     {
         super();
-        this.roots = new File[] { new File(System.getProperty("user.dir")) };
+        this.roots = Objects.requireNonNull(files);
         this.kslParent = null;
     }
     public KSLClassLoader(String[] paths)
     {
         this(Arrays.stream(paths).map(p -> new File(p)).<File>toArray(size -> new File[size]));
     }
-    
-    public final MetaClass<?> findMetaClass(String name) throws ClassNotFoundException
+    public KSLClassLoader()
     {
-        MetaClass<?> metaClass = cache.get(name);
+        super();
+        this.roots = new File[] { new File(System.getProperty("user.dir")) };
+        this.kslParent = null;
+    }
+    
+    public final KSLArray findArrayKSLType(String typeid, short dimension) throws ClassNotFoundException
+    {
+        return (KSLArray) findKSLType(Typename.arrayName(typeid, dimension));
+    }
+    
+    public final KSLType findKSLType(String typeid) throws ClassNotFoundException
+    {
+        MetaClass mc = findMetaClass(typeid);
+        if(!mc.isKSLType())
+            throw new ClassNotFoundException(typeid);
+        return (KSLType) mc;
+    }
+    
+    public final KSLType findKSLType(Class<?> javaClass) throws ClassNotFoundException
+    {
+        MetaClass mc = findMetaClass(javaClass);
+        if(!mc.isKSLType())
+            throw new ClassNotFoundException(javaClass.getName());
+        return (KSLType) mc;
+    }
+    
+    public final MetaClass findMetaClass(String typeid) throws ClassNotFoundException
+    {
+        MetaClass metaClass = findInCache(typeid);
         if(metaClass != null)
             return metaClass;
         
-        File file = getFile(name);
+        File file = getFile(typeid);
         if(file != null)
             return compileAndCreate(file);
-        
-        Class<?> jclass = super.loadClass(name);
-        return MetaClass.valueOf(jclass);
+        return findMetaClass(super.loadClass(typeid));
     }
     
-    private MetaClass<?> compileAndCreate(File file)
+    public final MetaClass findMetaClass(Class<?> javaClass)
+    {
+        MetaClass metaClass = ImmutableTypeManager.getTypeIfExists(javaClass);
+        if(metaClass != null)
+            return metaClass;
+        
+        metaClass = findInCache(javaClass);
+        if(metaClass != null)
+            return metaClass;
+        
+        metaClass = MetaClass.valueOf(javaClass, this);
+        scache.put(metaClass.getName(), metaClass);
+        ccache.put(javaClass, metaClass);
+        return metaClass;
+    }
+    
+    private MetaClass findInCache(String name)
+    {
+        MetaClass metaClass = scache.get(name);
+        return metaClass != null ? null : kslParent != null ? kslParent.findInCache(name) : null;
+    }
+    
+    private MetaClass findInCache(Class<?> jclass)
+    {
+        MetaClass metaClass = ccache.get(jclass);
+        return metaClass != null ? null : kslParent != null ? kslParent.findInCache(jclass) : null;
+    }
+    
+    private KSLType compileAndCreate(File file)
     {
         
     }
@@ -87,4 +145,10 @@ public class KSLClassLoader extends ClassLoader
         }
         return null;
     }
+    
+    
+    
+    
+    /* SCRIPT LOADING */
+    
 }

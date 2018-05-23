@@ -11,5 +11,5 @@ package kp.ksl.compiler.bytecode;
  */
 public final class FunctionBytecode
 {
-    private final ScriptBytecode 
+    //private final ScriptBytecode 
 }

@@ -5,100 +5,116 @@
  */
 package kp.ksl.compiler.types;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import kp.ksl.compiler.parser.Identifier;
-import org.apache.bcel.generic.Type;
+import kp.ksl.compiler.meta.Variable;
+import kp.ksl.lang.KSLClassLoader;
+import kp.ksl.lang.Struct;
+import org.apache.bcel.generic.ObjectType;
 
 /**
  *
- * @author Marc
+ * @author Asus
  */
 public final class KSLStruct extends KSLType
 {
-    private final HashMap<String, KSLStructField> fields;
+    private final HashMap<String, StructField> fields = new HashMap<>();
     
-    private KSLStruct(HashMap<String, KSLStructField> fields, Type type)
+    private KSLStruct(Class<?> jclass)
     {
-        super(Typeid.structId(fields.values()), Typename.structName(fields.values()), type);
-        this.fields = new HashMap<>(fields);
+        super(Typeid.structTypeid(jclass), Typename.structName(jclass), new ObjectType(jclass.getName()), jclass);
     }
     
     @Override
     public final boolean isMutable() { return true; }
 
     @Override
-    public final boolean isPrimitive() { return false; }
-    
-    @Override
-    public final boolean isString() { return false; }
-
-    @Override
-    public final boolean isArray() { return false; }
-
-    @Override
     public final boolean isStruct() { return true; }
-
-    @Override
-    public final boolean isReference() { return false; }
-    
-    @Override
-    public final boolean isVoid() { return false; }
-
-    @Override
-    public final short getDimension() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final KSLType getBaseType() { throw new UnsupportedOperationException(); }
 
     @Override
     public final boolean isValidField(String field) { return fields.containsKey(field); }
     
     @Override
-    public final KSLStructField getField(String field) { return fields.get(field); }
+    public final Variable getField(String field) { return fields.get(field); }
     
     @Override
     public final int getFieldCount() { return fields.size(); }
     
     @Override
-    public final List<KSLStructField> getAllFields() { return new ArrayList<>(fields.values()); }
+    public final List<Variable> getAllFields() { return new ArrayList<>(fields.values()); }
     
     @Override
     public final boolean canCastTo(KSLType type) { return is(type); }
     
-    public static final class KSLStructField
+    
+    public static final KSLStruct createStruct(Class<?> jclass, KSLClassLoader loader)
     {
-        private final String name;
-        private final KSLType type;
+        if(Struct.class.isAssignableFrom(jclass))
+            throw new IllegalArgumentException(jclass + " is not a valid struct class");
         
-        private KSLStructField(String name, KSLType type)
-        {
-            this.name = name;
-            this.type = type;
-        }
-        
-        public final String getName() { return name; }
-        public final KSLType getType() { return type; }
+        KSLStruct s = new KSLStruct(jclass);
+        s.loadFields(loader);
+        return s;
     }
     
-    public static final class KSLStructBuilder
+    private void loadFields(KSLClassLoader loader)
     {
-        private final HashMap<String, KSLStructField> fields = new HashMap<>();
-        
-        private KSLStructBuilder() {}
-        
-        public final KSLStructBuilder addField(String name, KSLType type)
+        for(Field field : jclass.getFields())
         {
-            if(!Identifier.isValidIdentifier(name))
-                throw new IllegalArgumentException();
-            if(type == null)
-                throw new NullPointerException();
-            KSLStructField field = new KSLStructField(name, type);
-            fields.put(name, field);
-            return this;
+            int mod = field.getModifiers();
+            if(Modifier.isFinal(mod) || Modifier.isStatic(mod) || !Modifier.isPublic(mod))
+                continue;
+            StructField sfield = new StructField(loader, field);
+            fields.put(sfield.getName(), sfield);
+        }
+    }
+    
+    
+    
+    private final class StructField extends Variable
+    {
+        private final KSLClassLoader classLoader;
+        private final Field field;
+        private KSLType type;
+        
+        private StructField(KSLClassLoader classLoader, Field field)
+        {
+            super();
+            this.classLoader = classLoader;
+            this.field = field;
         }
         
-        public final KSLStruct build(Type type) { return new KSLStruct(fields, type); }
+        @Override
+        public final KSLType getTypeOwner() { return KSLStruct.this; }
+        
+        @Override
+        public final String getName() { return field.getName(); }
+
+        @Override
+        public final KSLType getType()
+        {
+            if(type != null)
+                return type;
+            try { return type = classLoader.findKSLType(field.getType()); }
+            catch(ClassNotFoundException ex) { throw new RuntimeException(ex); }
+        }
+
+        @Override
+        public final int getLocalReference() { return -1; }
+
+        @Override
+        public final boolean isLocal() { return false; }
+
+        @Override
+        public final boolean isStatic() { return false; }
+
+        @Override
+        public final boolean isConst() { return false; }
+
+        @Override
+        public final boolean isInitiated() { return true; }
     }
 }

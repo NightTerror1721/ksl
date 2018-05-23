@@ -8,17 +8,19 @@ package kp.ksl.compiler.meta;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import kp.ksl.lang.KSLClassLoader;
+import org.apache.bcel.generic.ObjectType;
 
 /**
  *
  * @author Asus
  */
-public class MetaScript<C> extends MetaClass<C>
+public class MetaScript extends MetaClass
 {
     private final HashMap<String, Variable> fields = new HashMap<>();
     private final HashMap<String, Function> funcs = new HashMap<>();
     
-    private MetaScript(Class<C> jclass) { super(jclass); }
+    private MetaScript(Class<?> jclass) { super(jclass.getName(), new ObjectType(jclass.getName()), jclass); }
     
     private static boolean isInstancePresent(Class<?> jclass, KSLScript a)
     {
@@ -75,7 +77,9 @@ public class MetaScript<C> extends MetaClass<C>
     {
         for(Field field : jclass.getFields())
         {
-            if(Modifier.isStatic(field.getModifiers()))
+            if(!Modifier.isStatic(field.getModifiers()))
+                continue;
+            
         }
     }
     
@@ -84,7 +88,7 @@ public class MetaScript<C> extends MetaClass<C>
         
     }
     
-    public static final <C> MetaScript<C> createMetaScript(Class<C> jclass)
+    public static final MetaScript createMetaScript(Class<?> jclass, KSLClassLoader classLoader)
     {
         if(!jclass.isAnnotationPresent(KSLScript.class))
             return null;
@@ -92,7 +96,7 @@ public class MetaScript<C> extends MetaClass<C>
         if(!isInstancePresent(jclass, a))
             return null;
         
-        MetaScript<C> s = findMetaScriptCache(jclass, a);
+        MetaScript s = findMetaScriptCache(jclass, a);
         if(s != null)
             return s;
         
@@ -108,5 +112,5 @@ public class MetaScript<C> extends MetaClass<C>
     public final boolean isScript() { return true; }
 
     @Override
-    public final boolean isReference() { return false; }
+    public final boolean isKSLType() { return false; }
 }

@@ -9,59 +9,57 @@ import java.util.List;
 import java.util.Objects;
 import kp.ksl.compiler.InstructionCode;
 import kp.ksl.compiler.InstructionCodeType;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import kp.ksl.compiler.meta.MetaClass;
+import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.Type;
 
 /**
  *
  * @author Asus
  */
-public abstract class KSLType implements InstructionCode
+public abstract class KSLType extends MetaClass implements InstructionCode
 {
     protected final String id;
-    protected final String name;
-    protected final Type jtype;
     
-    KSLType(String id, String name, Type javaType)
+    KSLType(String id, String name, Type javaType, Class<?> javaClass)
     {
+        super(name, javaType, javaClass);
         if(id == null)
             throw new NullPointerException();
-        if(name == null)
-            throw new NullPointerException();
-        if(javaType == null)
-            throw new NullPointerException();
         this.id = id;
-        this.name = name;
-        this.jtype = javaType;
     }
     
     final String typeid() { return id; }
-    public final String getName() { return name; }
-    public final Type getJavaType() { return jtype; }
     
     public abstract boolean isMutable();
     
-    public abstract boolean isPrimitive();
-    public abstract boolean isString();
-    public abstract boolean isArray();
-    public abstract boolean isStruct();
-    public abstract boolean isReference();
-    public abstract boolean isVoid();
+    public boolean isPrimitive() { return false; }
+    public boolean isString() { return false; }
+    public boolean isArray() { return false; }
+    public boolean isStruct() { return false; }
+    public boolean isReference() { return false; }
+    public boolean isVoid() { return false; }
     
     /* For Array */
-    public abstract short getDimension();
-    public abstract KSLType getBaseType();
+    public short getDimension() { throw new UnsupportedOperationException(); }
+    public KSLType getBaseType() { throw new UnsupportedOperationException(); }
     
     /* For Structs */
-    public abstract boolean isValidField(String field);
-    public abstract KSLStructField getField(String field);
-    public abstract int getFieldCount();
-    public abstract List<KSLStructField> getAllFields();
+    public boolean isValidField(String field) { throw new UnsupportedOperationException(); }
+    public Variable getField(String field) { throw new UnsupportedOperationException(); }
+    public int getFieldCount() { throw new UnsupportedOperationException(); }
+    public List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
     
     /* Cast Operations */
-    public abstract boolean canCastTo(KSLType type);
+    public boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }
     
     /* Other */
+    
+    @Override
+    public final boolean isScript() { return false; }
+    
+    @Override
+    public final boolean isKSLType() { return true; }
     
     public boolean requireDoubleStackEntry() { return false; }
     

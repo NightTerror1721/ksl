@@ -13,5 +13,5 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLSignedInt16 extends KSLPrimitive
 {
-    public KSLSignedInt16() { super(Typeid.SINT16, Typename.integerName(TypeModifier.SIGNED_SHORT), BasicType.SHORT); }
+    public KSLSignedInt16() { super(Typeid.SINT16, Typename.integerName(TypeModifier.SIGNED_SHORT), BasicType.SHORT, Short.TYPE); }
 }

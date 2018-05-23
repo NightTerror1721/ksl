@@ -6,7 +6,7 @@
 package kp.ksl.compiler.types;
 
 import java.util.List;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.Type;
 
 /**
@@ -17,7 +17,7 @@ public final class KSLVoid extends KSLType
 {
 
     public KSLVoid() {
-        super(Typeid.VOID, Typename.VOID, Type.VOID);
+        super(Typeid.VOID, Typename.VOID, Type.VOID, Void.TYPE);
     }
 
     @Override
@@ -51,13 +51,13 @@ public final class KSLVoid extends KSLType
     public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
 
     @Override
-    public final KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+    public final Variable getField(String field) { throw new UnsupportedOperationException(); }
 
     @Override
     public final int getFieldCount() { throw new UnsupportedOperationException(); }
 
     @Override
-    public final List<KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
+    public final List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
 
     @Override
     public final boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }

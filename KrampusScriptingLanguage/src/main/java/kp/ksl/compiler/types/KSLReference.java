@@ -5,9 +5,7 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.List;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
-import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ObjectType;
 
 /**
  *
@@ -15,48 +13,23 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLReference extends KSLType
 {
-    public KSLReference() { super(Typeid.REFERENCE, Typename.REFERENCE, BasicType.OBJECT); }
+    static final KSLReference UNDEFINED_REFERENCE = new KSLReference(Object.class);
+    
+    private KSLReference(Class<?> jclass) { super(Typeid.of(jclass), Typename.REFERENCE, new ObjectType(jclass.getName()), jclass); }
     
     @Override
     public final boolean isMutable() { return false; }
 
     @Override
-    public final boolean isPrimitive() { return false; }
-    
-    @Override
-    public final boolean isString() { return false; }
-
-    @Override
-    public final boolean isArray() { return false; }
-
-    @Override
-    public final boolean isStruct() { return false; }
-
-    @Override
     public final boolean isReference() { return true; }
-    
-    @Override
-    public final boolean isVoid() { return false; }
-
-    @Override
-    public final short getDimension() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final KSLType getBaseType() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final int getFieldCount() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final List<KSLStruct.KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
 
     @Override
     public final boolean canCastTo(KSLType type) { return is(type); }
     
+    
+    
+    public static final KSLReference createReference(Class<?> javaClass)
+    {
+        return null;
+    }
 }

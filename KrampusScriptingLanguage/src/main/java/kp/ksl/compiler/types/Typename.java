@@ -5,25 +5,27 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.Collection;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import java.util.HashMap;
+import kp.ksl.lang.Struct;
+import kp.ksl.lang.UnsignedByteInteger;
+import kp.ksl.lang.UnsignedInteger;
+import kp.ksl.lang.UnsignedShortInteger;
 
 /**
  *
  * @author Asus
  */
-final class Typename
+public final class Typename
 {
     private Typename() {}
     
     public static final String VOID = "void";
     public static final String INTEGER = "int";
     public static final String FLOAT = "float";
+    public static final String BOOLEAN = "bool";
     public static final String CHARACTER = "char";
     public static final String STRING = "string";
     public static final String REFERENCE = "ref";
-    
-    private static final String ARRAY_SYMBOL = "[]";
     
     public static final String integerName(TypeModifier mod)
     {
@@ -41,21 +43,61 @@ final class Typename
     
     public static final String arrayName(KSLType baseType, short dimension)
     {
-        StringBuilder sb = new StringBuilder(baseType.getName());
-        for(int i = 0; i < dimension; i++)
-            sb.append(ARRAY_SYMBOL);
-        return sb.toString();
+        return arrayName(baseType.getName(), dimension);
+    }
+    public static final String arrayName(String name, short dimension)
+    {
+        if(dimension < 1)
+            throw new IllegalArgumentException();
+        char[] cstr = new char[name.length() + (dimension * 2)];
+        for(int i=name.length();i<cstr.length;i+=2)
+        {
+            cstr[i] = '[';
+            cstr[i + 1] = ']';
+        }
+        System.arraycopy(name.toCharArray(), 0, cstr, 0, name.length());
+        return new String(cstr, 0, cstr.length);
+    }
+    public static final String arrayName(Class<?> javaClass)
+    {
+        if(!javaClass.isArray())
+            throw new IllegalArgumentException();
+        return of(javaClass.getComponentType()) + "[]";
     }
     
-    public static String structName(Collection<KSLStructField> fields)
+    public static final String structName(Class<?> javaClass) { return of(javaClass); }
+    
+    public static final String of(Class<?> javaClass)
     {
-        StringBuilder sb = new StringBuilder("struct {");
-        if(!fields.isEmpty())
-        {
-            for(KSLStructField field : fields)
-                sb.append(field.getType()).append(" ").append(field.getName()).append("; ");
-            sb.delete(sb.length() - 2, sb.length());
-        }
-        return sb.append("}").toString();
+        String name = PRIMITIVE_TYPENAME.getOrDefault(javaClass, null);
+        if(name != null)
+            return name;
+        if(javaClass.isArray())
+            return of(javaClass.getComponentType()) + "[]";
+        if(Struct.class.isAssignableFrom(javaClass))
+            return "struct " + javaClass.getSimpleName();
+        return "ref<" + javaClass.getName() + ">";
+    }
+    
+    
+    
+    
+    private static final HashMap<Class<?>, String> PRIMITIVE_TYPENAME = new HashMap<>();
+    static {
+        PRIMITIVE_TYPENAME.put(Void.TYPE, VOID);
+        PRIMITIVE_TYPENAME.put(Byte.TYPE, integerName(TypeModifier.SIGNED_BYTE));
+        PRIMITIVE_TYPENAME.put(Short.TYPE, integerName(TypeModifier.SIGNED_SHORT));
+        PRIMITIVE_TYPENAME.put(Integer.TYPE, integerName(TypeModifier.SIGNED));
+        PRIMITIVE_TYPENAME.put(Long.TYPE, integerName(TypeModifier.SIGNED_LONG));
+        PRIMITIVE_TYPENAME.put(Byte.TYPE, integerName(TypeModifier.SIGNED_BYTE));
+        PRIMITIVE_TYPENAME.put(UnsignedByteInteger.class, integerName(TypeModifier.UNSIGNED_BYTE));
+        PRIMITIVE_TYPENAME.put(UnsignedShortInteger.class, integerName(TypeModifier.UNSIGNED_SHORT));
+        PRIMITIVE_TYPENAME.put(UnsignedInteger.class, integerName(TypeModifier.UNSIGNED));
+        PRIMITIVE_TYPENAME.put(Float.TYPE, floatName(TypeModifier.SIGNED));
+        PRIMITIVE_TYPENAME.put(Double.TYPE, floatName(TypeModifier.SIGNED_LONG));
+        PRIMITIVE_TYPENAME.put(Boolean.TYPE, BOOLEAN);
+        PRIMITIVE_TYPENAME.put(Character.TYPE, CHARACTER);
+        PRIMITIVE_TYPENAME.put(String.class, STRING);
+        PRIMITIVE_TYPENAME.put(Object.class, REFERENCE);
     }
 }

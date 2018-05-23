@@ -13,7 +13,15 @@ public abstract class Struct
 {
     public abstract int getFieldCount();
     
+    public abstract String[] getFieldNames();
+    
+    
+    public abstract Object getFieldValue(int fieldIndex);
+    
     public abstract Object getFieldValue(String fieldName);
+    
+    
+    public abstract void setFieldValue(int fieldIndex, Object value);
     
     public abstract void setFieldValue(String fieldName, Object value);
 }

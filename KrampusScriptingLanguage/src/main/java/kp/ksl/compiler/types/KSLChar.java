@@ -13,5 +13,5 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLChar extends KSLPrimitive
 {
-    public KSLChar() { super(Typeid.CHARACTER, Typename.CHARACTER, BasicType.CHAR); }
+    public KSLChar() { super(Typeid.CHARACTER, Typename.CHARACTER, BasicType.CHAR, Character.TYPE); }
 }

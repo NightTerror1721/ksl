@@ -5,25 +5,17 @@
  */
 package kp.ksl.compiler.meta;
 
-import java.util.Objects;
 import kp.ksl.compiler.types.KSLType;
-import org.apache.bcel.generic.Type;
 
 /**
  *
  * @author Asus
  */
 public abstract class Variable extends MetaObject
-{
-    protected final String name;
+{ 
+    protected Variable() {}
     
-    protected Variable(Type typeOwner, String name)
-    {
-        super(typeOwner);
-        this.name = Objects.requireNonNull(name);
-    }
-    
-    public final String getName() { return name; }
+    public abstract String getName();
     public abstract KSLType getType();
     public abstract int getLocalReference();
     

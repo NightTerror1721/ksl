@@ -15,9 +15,10 @@ import java.nio.file.Path;
  */
 public final class Main
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws ClassNotFoundException
     {
         System.out.println(Integer.TYPE);
+        System.out.println(Class.forName("[" + Class[].class.getName()));
         Path p = FileSystems.getDefault().getPath(new File(System.getProperty("user.dir")).getPath(), new File("src/kp").getPath());
     }
 }

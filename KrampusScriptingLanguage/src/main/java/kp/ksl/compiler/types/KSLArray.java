@@ -6,7 +6,7 @@
 package kp.ksl.compiler.types;
 
 import java.util.List;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.ArrayType;
 
 /**
@@ -20,7 +20,8 @@ public final class KSLArray extends KSLType
     
     private KSLArray(KSLType base, short dim)
     {
-        super(Typeid.arrayId(base, dim), Typename.arrayName(base, dim), new ArrayType(base.getJavaType(), dim));
+        super(Typeid.arrayTypeid(base, dim), Typename.arrayName(base, dim), new ArrayType(base.getJavaType(), dim),
+                findArrayJavaClass(base.getJavaClass(), dim));
         this.base = base;
         this.dimension = dim;
     }
@@ -72,14 +73,20 @@ public final class KSLArray extends KSLType
     public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
     
     @Override
-    public final KSLStruct.KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+    public final Variable getField(String field) { throw new UnsupportedOperationException(); }
     
     @Override
     public final int getFieldCount() { throw new UnsupportedOperationException(); }
     
     @Override
-    public final List<KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
+    public final List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
     
     @Override
     public final boolean canCastTo(KSLType type) { return is(type); }
+    
+    private static Class<?> findArrayJavaClass(Class<?> base, short dim)
+    {
+        try { return Class.forName(Typeid.arrayTypeid(base.getName(), dim)); }
+        catch(ClassNotFoundException ex) { throw new IllegalStateException(ex); }
+    }
 }

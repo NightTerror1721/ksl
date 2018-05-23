@@ -27,8 +27,10 @@ public final class NativeType
     public static final KSLType SIGNED_FLOAT = new KSLFloat32();
     public static final KSLType SIGNED_LONG_FLOAT = new KSLFloat64();
     
+    public static final KSLType BOOL = new KSLBool();
+    
     public static final KSLType CHAR = new KSLChar();
     public static final KSLType STRING = new KSLString();
     
-    public static final KSLType REF = new KSLReference();
+    public static final KSLType REF = KSLReference.UNDEFINED_REFERENCE;
 }

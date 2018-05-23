@@ -11,7 +11,7 @@ import org.apache.bcel.generic.BasicType;
  *
  * @author Asus
  */
-public final class KSLFloat32 extends KSLPrimitive
+public final class KSLBool extends KSLPrimitive
 {
-    public KSLFloat32() { super(Typeid.FLOAT32, Typename.floatName(TypeModifier.SIGNED), BasicType.FLOAT, Float.TYPE); }
+    public KSLBool() { super(Typeid.BOOLEAN, Typename.BOOLEAN, BasicType.BOOLEAN, Boolean.TYPE); }
 }

@@ -49,7 +49,7 @@ public final class VariablePool
         }
         
         public final int getLocalCount() { return localCount; }
-        public final boolean exists()
+        //public final boolean exists()
     }
     
     public final class Variable

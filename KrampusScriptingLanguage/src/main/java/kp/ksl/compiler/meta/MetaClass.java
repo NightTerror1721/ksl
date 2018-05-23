@@ -5,34 +5,45 @@
  */
 package kp.ksl.compiler.meta;
 
-import org.apache.bcel.generic.ObjectType;
+import kp.ksl.compiler.types.KSLReference;
+import kp.ksl.compiler.types.KSLStruct;
+import kp.ksl.lang.KSLClassLoader;
+import kp.ksl.lang.Struct;
 import org.apache.bcel.generic.Type;
 
-public abstract class MetaClass<C>
+public abstract class MetaClass
 {
-    protected final Class<C> jclass;
-    protected final Type jtype;
     protected final String name;
+    protected final Type jtype;
+    protected final Class<?> jclass;
     
-    MetaClass(Class<C> jclass)
+    
+    protected MetaClass(String name, Type jtype, Class<?> jclass)
     {
+        if(name == null)
+            throw new NullPointerException();
+        if(jtype == null)
+            throw new NullPointerException();
         if(jclass == null)
             throw new NullPointerException();
+        this.name = name;
+        this.jtype = jtype;
         this.jclass = jclass;
-        this.jtype = new ObjectType(this.name = jclass.getName());
     }
     
     public final String getName() { return name; }
     public final Type getJavaType() { return jtype; }
-    public final Class<C> getJavaClass() { return jclass; }
+    public final Class<?> getJavaClass() { return jclass; }
     
     public abstract boolean isScript();
-    public abstract boolean isReference();
+    public abstract boolean isKSLType();
     
     
-    public static final <C> MetaClass<C> valueOf(Class<C> jclass)
+    public static final MetaClass valueOf(Class<?> jclass, KSLClassLoader classLoader)
     {
-        MetaClass<C> mc = MetaScript.valueOf(jclass);
-        return mc == null ? MetaReference.valueOf(jclass) : mc;
+        if(Struct.class.isAssignableFrom(jclass))
+            return KSLStruct.createStruct(jclass, classLoader);
+        MetaClass mc = MetaScript.createMetaScript(jclass, classLoader);
+        return mc == null ? KSLReference.createReference(jclass, classLoader) : mc;
     }
 }

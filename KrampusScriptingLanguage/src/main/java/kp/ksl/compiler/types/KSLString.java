@@ -6,7 +6,7 @@
 package kp.ksl.compiler.types;
 
 import java.util.List;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.BasicType;
 
 /**
@@ -15,7 +15,7 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLString extends KSLType
 {
-    public KSLString() { super(Typeid.STRING, Typename.STRING, BasicType.STRING); }
+    public KSLString() { super(Typeid.STRING, Typename.STRING, BasicType.STRING, String.class); }
     
     @Override
     public final boolean isMutable() { return false; }
@@ -48,13 +48,13 @@ public final class KSLString extends KSLType
     public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
 
     @Override
-    public final KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
+    public final Variable getField(String field) { throw new UnsupportedOperationException(); }
 
     @Override
     public final int getFieldCount() { throw new UnsupportedOperationException(); }
 
     @Override
-    public final List<KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
+    public final List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
 
     @Override
     public final boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }

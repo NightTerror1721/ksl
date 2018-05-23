@@ -5,7 +5,6 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.List;
 import org.apache.bcel.generic.Type;
 
 /**
@@ -14,46 +13,13 @@ import org.apache.bcel.generic.Type;
  */
 abstract class KSLPrimitive extends KSLType
 {
-    KSLPrimitive(String id, String name, Type javaType) { super(id, name, javaType); }
+    KSLPrimitive(String id, String name, Type javaType, Class<?> javaClass) { super(id, name, javaType, javaClass); }
     
     @Override
     public final boolean isMutable() { return false; }
     
     @Override
     public final boolean isPrimitive() { return true; }
-    
-    @Override
-    public final boolean isString() { return false; }
-
-    @Override
-    public final boolean isArray() { return false; }
-
-    @Override
-    public final boolean isStruct() { return false; }
-
-    @Override
-    public final boolean isReference() { return false; }
-    
-    @Override
-    public final boolean isVoid() { return false; }
-    
-    @Override
-    public final short getDimension() { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final KSLType getBaseType() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final KSLStruct.KSLStructField getField(String field) { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final int getFieldCount() { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final List<KSLStruct.KSLStructField> getAllFields() { throw new UnsupportedOperationException(); }
     
     @Override
     public final boolean canCastTo(KSLType type)
@@ -69,6 +35,7 @@ abstract class KSLPrimitive extends KSLType
             case Typeid.UINT32:
             case Typeid.FLOAT32:
             case Typeid.FLOAT64:
+            case Typeid.BOOLEAN:
             case Typeid.CHARACTER:
                 return true;
             default: return false;

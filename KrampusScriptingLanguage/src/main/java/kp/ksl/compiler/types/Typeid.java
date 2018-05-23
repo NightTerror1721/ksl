@@ -5,14 +5,13 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.Collection;
-import kp.ksl.compiler.types.KSLStruct.KSLStructField;
+import java.util.HashMap;
 
 /**
  *
  * @author Asus
  */
-final class Typeid
+public final class Typeid
 {
     private Typeid() {}
     
@@ -30,62 +29,103 @@ final class Typeid
     public static final char SUFIX_8BYTE = 'l';
     public static final char SUFIX_END = ';';
     
-    public static final String VOID = "v";
+    public static final String VOID = "V";
     
-    public static final String SINT8 = "ib";
-    public static final String SINT16 = "is";
-    public static final String SINT32 = "ii";
-    public static final String SINT64 = "il";
+    public static final String SINT8 = "B";
+    public static final String SINT16 = "S";
+    public static final String SINT32 = "I";
+    public static final String SINT64 = "J";
     
-    public static final String UINT8 = "ub";
-    public static final String UINT16 = "us";
-    public static final String UINT32 = "ui";
+    public static final String UINT8 = "Lkp.ksl.lang.UnsignedByteInteger;";
+    public static final String UINT16 = "Lkp.ksl.lang.UnsignedShortInteger;";
+    public static final String UINT32 = "Lkp.ksl.lang.UnsignedInteger;";
     
-    public static final String FLOAT32 = "fi";
-    public static final String FLOAT64 = "fl";
+    public static final String FLOAT32 = "F";
+    public static final String FLOAT64 = "D";
     
-    public static final String CHARACTER = "cb";
-    public static final String STRING = "cs";
+    public static final String BOOLEAN = "Z";
     
-    public static final String REFERENCE = "r";
+    public static final String CHARACTER = "C";
+    public static final String STRING = "Ljava.lang.String;";
     
     public static final boolean isVoid(String typeid) { return typeid.equals(VOID); }
     
     public static final boolean isNumeric(String typeid)
     {
-        if(typeid.length() == 2)
+        switch(typeid)
         {
-            char c = typeid.charAt(0);
-            return c == PREFIX_SINT || c == PREFIX_UINT || c == PREFIX_FLOAT;
+            case SINT8: case SINT16: case SINT32: case SINT64:
+            case UINT8: case UINT16: case UINT32:
+            case FLOAT32: case FLOAT64:
+                return true;
+            default: return false;
         }
-        return false;
     }
     
     public static final boolean isInteger(String typeid)
     {
-        if(typeid.length() == 2)
+        switch(typeid)
         {
-            char c = typeid.charAt(0);
-            return c == PREFIX_SINT || c == PREFIX_UINT;
+            case SINT8: case SINT16: case SINT32: case SINT64:
+            case UINT8: case UINT16: case UINT32:
+                return true;
+            default: return false;
         }
-        return false;
     }
-    public static final boolean isSignedInteger(String typeid) { return typeid.length() == 2 && typeid.charAt(0) == PREFIX_SINT; }
-    public static final boolean isUnsignedInteger(String typeid) { return typeid.length() == 2 && typeid.charAt(0) == PREFIX_UINT; }
+    public static final boolean isSignedInteger(String typeid)
+    {
+        switch(typeid)
+        {
+            case SINT8: case SINT16: case SINT32: case SINT64:
+                return true;
+            default: return false;
+        }
+    }
+    public static final boolean isUnsignedInteger(String typeid)
+    {
+        switch(typeid)
+        {
+            case UINT8: case UINT16: case UINT32:
+                return true;
+            default: return false;
+        }
+    }
     
-    public static final boolean isFloat(String typeid) { return typeid.length() == 2 && typeid.charAt(0) == PREFIX_FLOAT; }
+    public static final boolean isFloat(String typeid)
+    {
+        switch(typeid)
+        {
+            case FLOAT32: case FLOAT64:
+                return true;
+            default: return false;
+        }
+    }
     
     public static final boolean isCharacter(String typeid) { return typeid.equals(CHARACTER); }
     public static final boolean isString(String typeid) { return typeid.equals(STRING); }
     
-    public static final String arrayId(KSLType baseType, short depth)
+    public static final String arrayTypeid(Class<?> javaClass, short dimension)
     {
-        if(depth < 1)
+        return Typeid.arrayTypeid(javaClass.getName(), dimension);
+    }
+    public static final String arrayTypeid(KSLType baseType, short dimension)
+    {
+        return Typeid.arrayTypeid(baseType.typeid(), dimension);
+    }
+    public static final String arrayTypeid(String typeid, short dimension)
+    {
+        if(dimension < 1)
             throw new IllegalArgumentException();
-        return PREFIX_ARRAY + baseType.typeid() + depth + SUFIX_END;
+        char[] cstr = new char[typeid.length() + dimension];
+        for(int i=0;i<dimension;i++)
+            cstr[i] = '[';
+        System.arraycopy(typeid.toCharArray(), 0, cstr, dimension, typeid.length());
+        return new String(cstr, 0, cstr.length);
     }
     
-    public static final String structId(Collection<KSLStructField> types)
+    public static final String structTypeid(Class<?> javaClass) { return of(javaClass); }
+    
+    /*public static final String structId(Collection<KSLStructField> types)
     {
         if(types == null)
             throw new NullPointerException();
@@ -96,5 +136,29 @@ final class Typeid
         for(KSLStructField type : types)
             sb.append(type.getType().typeid());
         return sb.append(SUFIX_END).toString();
+    }*/
+    
+    
+    
+    
+    
+    /* Typeid Conversions */
+    private static final HashMap<Class<?>, String> PRIMITIVE_TYPEID = new HashMap<>();
+    static {
+        PRIMITIVE_TYPEID.put(Void.TYPE, VOID);
+        PRIMITIVE_TYPEID.put(Byte.TYPE, SINT8);
+        PRIMITIVE_TYPEID.put(Short.TYPE, SINT16);
+        PRIMITIVE_TYPEID.put(Integer.TYPE, SINT32);
+        PRIMITIVE_TYPEID.put(Long.TYPE, SINT64);
+        PRIMITIVE_TYPEID.put(Float.TYPE, FLOAT32);
+        PRIMITIVE_TYPEID.put(Double.TYPE, FLOAT64);
+        PRIMITIVE_TYPEID.put(Character.TYPE, CHARACTER);
+        PRIMITIVE_TYPEID.put(Boolean.TYPE, BOOLEAN);
+    }
+    
+    public static final String of(Class<?> javaClass)
+    {
+        String typeid = PRIMITIVE_TYPEID.getOrDefault(javaClass, null);
+        return typeid != null ? typeid : javaClass.getName();
     }
 }
