@@ -5,8 +5,6 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.List;
-import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.Type;
 
 /**
@@ -24,40 +22,7 @@ public final class KSLVoid extends KSLType
     public final boolean isMutable() { return false; }
 
     @Override
-    public final boolean isPrimitive() { return false; }
-
-    @Override
-    public final boolean isString() { return false; }
-
-    @Override
-    public final boolean isArray() { return false; }
-
-    @Override
-    public final boolean isStruct() { return false; }
-
-    @Override
-    public final boolean isReference() { return false; }
-
-    @Override
     public final boolean isVoid() { return true; }
-
-    @Override
-    public final short getDimension() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final KSLType getBaseType() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final Variable getField(String field) { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final int getFieldCount() { throw new UnsupportedOperationException(); }
-
-    @Override
-    public final List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
 
     @Override
     public final boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }

@@ -5,8 +5,6 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.List;
-import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.ArrayType;
 
 /**
@@ -46,40 +44,13 @@ public final class KSLArray extends KSLType
     public final boolean isMutable() { return true; }
 
     @Override
-    public final boolean isPrimitive() { return false; }
-    
-    @Override
-    public final boolean isString() { return false; }
-
-    @Override
     public final boolean isArray() { return true; }
-
-    @Override
-    public final boolean isStruct() { return false; }
-
-    @Override
-    public final boolean isReference() { return false; }
-    
-    @Override
-    public final boolean isVoid() { return false; }
     
     @Override
     public final short getDimension() { return dimension; }
     
     @Override
     public final KSLType getBaseType() { return base; }
-    
-    @Override
-    public final boolean isValidField(String field) { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final Variable getField(String field) { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final int getFieldCount() { throw new UnsupportedOperationException(); }
-    
-    @Override
-    public final List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
     
     @Override
     public final boolean canCastTo(KSLType type) { return is(type); }

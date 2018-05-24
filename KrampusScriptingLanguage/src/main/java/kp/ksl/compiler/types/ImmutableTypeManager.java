@@ -57,7 +57,6 @@ public final class ImmutableTypeManager
             case Typename.BOOLEAN: return BOOL;
             case Typename.CHARACTER: return CHAR;
             case Typename.STRING: return STRING;
-            case Typename.REFERENCE: return REF;
             default: throw new CompilationError("Invalid type: " + name);
         }
     }
@@ -78,7 +77,6 @@ public final class ImmutableTypeManager
         NATIVE_BINDS.put(BOOL.getJavaClass(), BOOL);
         NATIVE_BINDS.put(CHAR.getJavaClass(), CHAR);
         NATIVE_BINDS.put(STRING.getJavaClass(), STRING);
-        NATIVE_BINDS.put(REF.getJavaClass(), REF);
     }
     
     public static final KSLType getTypeIfExists(Class<?> jclass)

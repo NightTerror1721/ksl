@@ -13,6 +13,7 @@ import java.util.Objects;
 import kp.ksl.compiler.meta.MetaClass;
 import kp.ksl.compiler.types.ImmutableTypeManager;
 import kp.ksl.compiler.types.KSLArray;
+import kp.ksl.compiler.types.KSLReference;
 import kp.ksl.compiler.types.KSLType;
 import kp.ksl.compiler.types.Typename;
 
@@ -25,6 +26,7 @@ public class KSLClassLoader extends ClassLoader
     private final HashMap<String, MetaClass> scache = new HashMap<>();
     private final HashMap<Class<?>, MetaClass> ccache = new HashMap<>();
     private final KSLClassLoader kslParent;
+    private final KSLType refType;
     private final File[] roots;
     
     public KSLClassLoader(File[] files, ClassLoader parent)
@@ -32,6 +34,7 @@ public class KSLClassLoader extends ClassLoader
         super(parent);
         this.roots = Objects.requireNonNull(files);
         this.kslParent = parent instanceof KSLClassLoader ? (KSLClassLoader) parent : null;
+        this.refType = findRefMetaClass();
     }
     public KSLClassLoader(String[] paths, ClassLoader parent)
     {
@@ -42,6 +45,7 @@ public class KSLClassLoader extends ClassLoader
         super();
         this.roots = Objects.requireNonNull(files);
         this.kslParent = null;
+        this.refType = findRefMetaClass();
     }
     public KSLClassLoader(String[] paths)
     {
@@ -52,6 +56,14 @@ public class KSLClassLoader extends ClassLoader
         super();
         this.roots = new File[] { new File(System.getProperty("user.dir")) };
         this.kslParent = null;
+        this.refType = findRefMetaClass();
+    }
+    
+    private KSLType findRefMetaClass()
+    {
+        if(kslParent != null)
+            return kslParent.refType;
+        return KSLReference.createReference(Object.class, this);
     }
     
     public final KSLArray findArrayKSLType(String typeid, short dimension) throws ClassNotFoundException
@@ -89,6 +101,9 @@ public class KSLClassLoader extends ClassLoader
     
     public final MetaClass findMetaClass(Class<?> javaClass)
     {
+        if(javaClass == Object.class)
+            return refType;
+        
         MetaClass metaClass = ImmutableTypeManager.getTypeIfExists(javaClass);
         if(metaClass != null)
             return metaClass;

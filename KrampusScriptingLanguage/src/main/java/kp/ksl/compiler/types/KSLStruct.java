@@ -7,9 +7,7 @@ package kp.ksl.compiler.types;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import kp.ksl.compiler.meta.Variable;
 import kp.ksl.lang.KSLClassLoader;
 import kp.ksl.lang.Struct;
@@ -42,9 +40,6 @@ public final class KSLStruct extends KSLType
     
     @Override
     public final int getFieldCount() { return fields.size(); }
-    
-    @Override
-    public final List<Variable> getAllFields() { return new ArrayList<>(fields.values()); }
     
     @Override
     public final boolean canCastTo(KSLType type) { return is(type); }

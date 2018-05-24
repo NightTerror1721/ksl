@@ -5,11 +5,12 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.List;
 import java.util.Objects;
 import kp.ksl.compiler.InstructionCode;
 import kp.ksl.compiler.InstructionCodeType;
+import kp.ksl.compiler.meta.Function;
 import kp.ksl.compiler.meta.MetaClass;
+import kp.ksl.compiler.meta.Signature;
 import kp.ksl.compiler.meta.Variable;
 import org.apache.bcel.generic.Type;
 
@@ -40,15 +41,25 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     public boolean isReference() { return false; }
     public boolean isVoid() { return false; }
     
-    /* For Array */
+    /* Array Options */
     public short getDimension() { throw new UnsupportedOperationException(); }
     public KSLType getBaseType() { throw new UnsupportedOperationException(); }
     
-    /* For Structs */
+    /* Field Options */
     public boolean isValidField(String field) { throw new UnsupportedOperationException(); }
     public Variable getField(String field) { throw new UnsupportedOperationException(); }
     public int getFieldCount() { throw new UnsupportedOperationException(); }
-    public List<Variable> getAllFields() { throw new UnsupportedOperationException(); }
+    
+    /* Function Options */
+    public boolean isValidFunction(Signature signature) { throw new UnsupportedOperationException(); }
+    public Function getFunction(Signature signature) { throw new UnsupportedOperationException(); }
+    public final Function getReferenceMethod(Signature signature)
+    {
+        Signature ms = signature.asMethodSignature();
+        if(ms == null)
+            throw new CompilationError("Expected an assignable");
+    }
+    
     
     /* Cast Operations */
     public boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }

@@ -48,6 +48,8 @@ public final class Typeid
     public static final String CHARACTER = "C";
     public static final String STRING = "Ljava.lang.String;";
     
+    public static final String REFERENCE = "Ljava.lang.Object;";
+    
     public static final boolean isVoid(String typeid) { return typeid.equals(VOID); }
     
     public static final boolean isNumeric(String typeid)

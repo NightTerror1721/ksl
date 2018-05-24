@@ -31,6 +31,4 @@ public final class NativeType
     
     public static final KSLType CHAR = new KSLChar();
     public static final KSLType STRING = new KSLString();
-    
-    public static final KSLType REF = KSLReference.UNDEFINED_REFERENCE;
 }
