@@ -8,10 +8,12 @@ package kp.ksl.compiler.types;
 import java.util.Objects;
 import kp.ksl.compiler.InstructionCode;
 import kp.ksl.compiler.InstructionCodeType;
+import kp.ksl.compiler.exception.CompilationError;
 import kp.ksl.compiler.meta.Function;
 import kp.ksl.compiler.meta.MetaClass;
 import kp.ksl.compiler.meta.Signature;
 import kp.ksl.compiler.meta.Variable;
+import kp.ksl.lang.KSLClassLoader;
 import org.apache.bcel.generic.Type;
 
 /**
@@ -53,7 +55,7 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     /* Function Options */
     public boolean isValidFunction(Signature signature) { throw new UnsupportedOperationException(); }
     public Function getFunction(Signature signature) { throw new UnsupportedOperationException(); }
-    public final Function getReferenceMethod(Signature signature)
+    public final Function getReferenceMethod(Signature signature) throws CompilationError
     {
         Signature ms = signature.asMethodSignature();
         if(ms == null)
@@ -62,7 +64,11 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     
     
     /* Cast Operations */
-    public boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }
+    public abstract boolean isManualAssignableFrom(KSLType type);
+    public abstract boolean isAutoAssignableFrom(KSLType type);
+    public KSLReference getWrapperFromPrimitive(KSLClassLoader classLoader) { return null; }
+    public KSLPrimitive getPrimitiveFromWrapper() { return null; }
+    //public boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }
     
     /* Other */
     
@@ -72,15 +78,16 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     @Override
     public final boolean isKSLType() { return true; }
     
+    public final boolean isJavaObjectClass() { return jclass == Object.class; }
+    
     public boolean requireDoubleStackEntry() { return false; }
     
-    public final boolean equals(KSLType other) { return this == other || typeid().equals(other.typeid()); }
+    public final boolean equals(KSLType other) { return is(other); }
     
-    public final boolean is(KSLType other) { return this == other || typeid().equals(other.typeid()); }
-    public final boolean is(String typeid) { return typeid().equals(typeid); }
+    public final boolean is(KSLType other) { return this == other || jclass == other.jclass; }
     
     @Override
-    public final boolean equals(Object o) { return o instanceof KSLType && equals((KSLType) o); }
+    public final boolean equals(Object o) { return o instanceof KSLType && is((KSLType) o); }
 
     @Override
     public final int hashCode()

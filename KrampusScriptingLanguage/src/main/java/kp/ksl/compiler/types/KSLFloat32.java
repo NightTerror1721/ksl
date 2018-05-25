@@ -13,5 +13,26 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLFloat32 extends KSLPrimitive
 {
-    public KSLFloat32() { super(Typeid.FLOAT32, Typename.floatName(TypeModifier.SIGNED), BasicType.FLOAT, Float.TYPE); }
+    public KSLFloat32() { super(Typeid.FLOAT32, Typename.floatName(TypeModifier.SIGNED), BasicType.FLOAT, Float.TYPE, Float.class); }
+    
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        if(is(type))
+            return true;
+        switch(type.typeid())
+        {
+            case Typeid.BOOLEAN:
+            case Typeid.SINT8:
+            case Typeid.UINT8:
+            case Typeid.SINT16:
+            case Typeid.UINT16:
+            case Typeid.CHARACTER:
+            case Typeid.SINT32:
+            case Typeid.UINT32:
+            case Typeid.SINT64:
+                return true;
+            default: return false;
+        }
+    }
 }

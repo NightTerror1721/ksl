@@ -52,12 +52,21 @@ public final class KSLArray extends KSLType
     @Override
     public final KSLType getBaseType() { return base; }
     
-    @Override
-    public final boolean canCastTo(KSLType type) { return is(type); }
-    
     private static Class<?> findArrayJavaClass(Class<?> base, short dim)
     {
         try { return Class.forName(Typeid.arrayTypeid(base.getName(), dim)); }
         catch(ClassNotFoundException ex) { throw new IllegalStateException(ex); }
+    }
+
+    @Override
+    public final boolean isManualAssignableFrom(KSLType type)
+    {
+        return isAutoAssignableFrom(type) || type.getJavaClass().isAssignableFrom(jclass);
+    }
+
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        return jclass.isAssignableFrom(type.getJavaClass());
     }
 }

@@ -22,6 +22,17 @@ public final class KSLString extends KSLType
     public final boolean isString() { return true; }
 
     @Override
-    public final boolean canCastTo(KSLType type) { return is(type); }
+    public boolean isManualAssignableFrom(KSLType type)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isAutoAssignableFrom(KSLType type)
+    {
+        return is(type) && (type.isReference() && is(type.getBaseType()));
+    }
+
+    
     
 }

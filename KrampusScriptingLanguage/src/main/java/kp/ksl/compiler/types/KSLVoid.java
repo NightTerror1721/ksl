@@ -25,6 +25,9 @@ public final class KSLVoid extends KSLType
     public final boolean isVoid() { return true; }
 
     @Override
-    public final boolean canCastTo(KSLType type) { throw new UnsupportedOperationException(); }
+    public final boolean isManualAssignableFrom(KSLType type) { return false; }
+
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type) { return false; }
     
 }

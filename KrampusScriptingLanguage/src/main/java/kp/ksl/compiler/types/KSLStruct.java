@@ -41,9 +41,6 @@ public final class KSLStruct extends KSLType
     @Override
     public final int getFieldCount() { return fields.size(); }
     
-    @Override
-    public final boolean canCastTo(KSLType type) { return is(type); }
-    
     
     public static final KSLStruct createStruct(Class<?> jclass, KSLClassLoader loader)
     {
@@ -65,6 +62,18 @@ public final class KSLStruct extends KSLType
             StructField sfield = new StructField(loader, field);
             fields.put(sfield.getName(), sfield);
         }
+    }
+
+    @Override
+    public final boolean isManualAssignableFrom(KSLType type)
+    {
+        return is(type) || type.getJavaClass().isAssignableFrom(jclass); 
+    }
+
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        return is(type) || type.isJavaObjectClass();
     }
     
     

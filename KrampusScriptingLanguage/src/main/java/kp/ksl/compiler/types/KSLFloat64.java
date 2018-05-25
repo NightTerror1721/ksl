@@ -13,8 +13,14 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLFloat64 extends KSLPrimitive
 {
-    public KSLFloat64() { super(Typeid.FLOAT64, Typename.floatName(TypeModifier.SIGNED_LONG), BasicType.DOUBLE, Double.TYPE); }
+    public KSLFloat64() { super(Typeid.FLOAT64, Typename.floatName(TypeModifier.SIGNED_LONG), BasicType.DOUBLE, Double.TYPE, Double.class); }
     
     @Override
     public final boolean requireDoubleStackEntry() { return true; }
+    
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        return type.isPrimitive();
+    }
 }

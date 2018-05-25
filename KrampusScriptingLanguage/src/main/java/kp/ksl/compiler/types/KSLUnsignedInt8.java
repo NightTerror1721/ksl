@@ -17,5 +17,20 @@ public final class KSLUnsignedInt8 extends KSLPrimitive
     public KSLUnsignedInt8() { super(Typeid.UINT8,
             Typename.integerName(TypeModifier.UNSIGNED_BYTE),
             new ObjectType(UnsignedByteInteger.class.getName()),
-            UnsignedByteInteger.class); }
+            UnsignedByteInteger.class,
+            null); }
+    
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        if(is(type))
+            return true;
+        switch(type.typeid())
+        {
+            case Typeid.BOOLEAN:
+            case Typeid.SINT8:
+                return true;
+            default: return false;
+        }
+    }
 }

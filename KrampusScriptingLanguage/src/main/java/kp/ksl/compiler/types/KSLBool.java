@@ -13,5 +13,11 @@ import org.apache.bcel.generic.BasicType;
  */
 public final class KSLBool extends KSLPrimitive
 {
-    public KSLBool() { super(Typeid.BOOLEAN, Typename.BOOLEAN, BasicType.BOOLEAN, Boolean.TYPE); }
+    public KSLBool() { super(Typeid.BOOLEAN, Typename.BOOLEAN, BasicType.BOOLEAN, Boolean.TYPE, Boolean.class); }
+    
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        return is(type);
+    }
 }

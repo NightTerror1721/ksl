@@ -19,6 +19,8 @@ public final class Main
     {
         System.out.println(Integer.TYPE);
         System.out.println(Class.forName("[" + Class[].class.getName()));
+        System.out.println(Number[][].class.isAssignableFrom(Integer[][].class));
+        System.out.println(Integer.TYPE.isAssignableFrom(Short.TYPE));
         Path p = FileSystems.getDefault().getPath(new File(System.getProperty("user.dir")).getPath(), new File("src/kp").getPath());
     }
 }
