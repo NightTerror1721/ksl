@@ -38,6 +38,10 @@ public abstract class MetaClass
     public abstract boolean isScript();
     public abstract boolean isKSLType();
     
+    /* Field Options */
+    public abstract boolean isValidField(String field);
+    public abstract Variable getField(String field);
+    
     
     public static final MetaClass valueOf(Class<?> jclass, KSLClassLoader classLoader)
     {

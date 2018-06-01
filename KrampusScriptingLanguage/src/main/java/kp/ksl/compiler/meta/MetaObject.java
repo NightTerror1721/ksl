@@ -6,6 +6,7 @@
 package kp.ksl.compiler.meta;
 
 import kp.ksl.compiler.types.KSLType;
+import org.apache.bcel.generic.Type;
 
 /**
  *
@@ -16,4 +17,5 @@ public abstract class MetaObject
     MetaObject() {}
     
     public abstract KSLType getTypeOwner();
+    public Type getTypeOwnerAsBcel() { return getTypeOwner().getJavaType(); }
 }

@@ -32,7 +32,7 @@ public abstract class KSLPrimitive extends KSLType
     @Override
     public final boolean isManualAssignableFrom(KSLType type)
     {
-        return type.isPrimitive();
+        return is(type) || type.isPrimitive();
     }
     
     @Override

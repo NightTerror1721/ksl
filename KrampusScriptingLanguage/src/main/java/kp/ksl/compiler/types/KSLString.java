@@ -24,13 +24,13 @@ public final class KSLString extends KSLType
     @Override
     public boolean isManualAssignableFrom(KSLType type)
     {
-        return true;
+        return is(type);
     }
 
     @Override
     public boolean isAutoAssignableFrom(KSLType type)
     {
-        return is(type) && (type.isReference() && is(type.getBaseType()));
+        return is(type);
     }
 
     

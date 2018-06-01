@@ -5,8 +5,11 @@
  */
 package kp.ksl.compiler.types;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import kp.ksl.compiler.exception.CompilationError;
 import kp.ksl.compiler.meta.Function;
 import kp.ksl.compiler.meta.Signature;
 import kp.ksl.compiler.meta.Variable;
@@ -20,8 +23,8 @@ import org.apache.bcel.generic.ObjectType;
 public final class KSLReference extends KSLType
 {
     private final KSLClassLoader classLoader;
-    private final HashMap<String, Variable> fields = new HashMap<>();
-    private final HashMap<Signature, Function> funcs = new HashMap<>();
+    private final HashMap<String, ReferenceField> fields = new HashMap<>();
+    private final HashMap<Signature, ReferenceMethod> funcs = new HashMap<>();
     
     private KSLReference(Class<?> jclass, KSLClassLoader classLoader)
     {
@@ -36,30 +39,87 @@ public final class KSLReference extends KSLType
     public final boolean isReference() { return true; }
 
     @Override
-    public final boolean canCastTo(KSLType type) { return is(type); }
-    
-    
-    private Function findFunction(Signature signature)
+    public final boolean isManualAssignableFrom(KSLType type)
     {
-        Function f = funcs.get(signature);
-        if(f != null)
-            return f;
+        return is(type) || (type.isReference() &&
+                (jclass.isAssignableFrom(type.getJavaClass()) || type.getJavaClass().isAssignableFrom(jclass)));
+    }
+
+    @Override
+    public final boolean isAutoAssignableFrom(KSLType type)
+    {
+        return is(type) || (type.isReference() && jclass.isAssignableFrom(type.getJavaClass()));
+    }
+    
+    
+    private ReferenceField findField(String name)
+    {
+        ReferenceField rf = fields.getOrDefault(id, null);
+        if(rf != null)
+            return rf;
+        try
+        {
+            Field f = jclass.getField(name);
+            if(f == null)
+                return null;
+            if(!Modifier.isPublic(f.getModifiers()))
+                return null;
+            rf = new ReferenceField(f);
+            fields.put(rf.getName(), rf);
+            return rf;
+        }
+        catch(NoSuchFieldException | SecurityException ex) { return null; }
+    }
+    
+    @Override
+    public final boolean isValidField(String field) { return findField(name) != null; }
+    
+    @Override
+    public final Variable getField(String field) { return findField(name); }
+    
+    
+    private Signature parseSignature(Signature signature) throws CompilationError
+    {
+        Signature ms = signature.asMethodSignature();
+        if(ms == null)
+            throw new CompilationError("Expected minimum one argument in refernce method call");
+        if(!isAutoAssignableFrom(signature.getParameterType(0)))
+            throw new CompilationError("Cannot assign " + signature.getParameterType(0) + " into " + this);
+        return ms;
+    }
+    
+    private ReferenceMethod findFunction(Signature signature) throws CompilationError
+    {
+        signature = parseSignature(signature);
+        ReferenceMethod rm = funcs.getOrDefault(signature, null);
+        if(rm != null)
+            return rm;
         try
         {
             Class<?>[] jtypes = signature.getJavaParameterTypes();
             Method m = jclass.getMethod(signature.getName(), jtypes);
             if(m == null)
                 return null;
-            
+            if(!Modifier.isPublic(m.getModifiers()))
+                return null;
+            rm = new ReferenceMethod(signature, m);
+            funcs.put(signature, rm);
+            return rm;
         }
-        catch(Exception ex) { return null; }
+        catch(ClassNotFoundException | NoSuchMethodException | SecurityException ex) { return null; }
     }
     
     @Override
-    public final boolean isValidFunction(Signature signature) { throw new UnsupportedOperationException(); }
+    public final boolean isValidReferenceMethod(Signature signature) throws CompilationError
+    {
+        return findFunction(signature) != null;
+    }
     
     @Override
-    public final Function getFunction(Signature signature) { throw new UnsupportedOperationException(); }
+    public final Function getReferenceMethod(Signature signature) throws CompilationError
+    {
+        return findFunction(signature);
+    }
     
     
     public static final KSLReference createReference(Class<?> javaClass, KSLClassLoader loader)
@@ -67,6 +127,52 @@ public final class KSLReference extends KSLType
         return null;
     }
     
+    
+    
+    
+    private final class ReferenceField extends Variable
+    {
+        private final Field field;
+        private final boolean _const;
+        private KSLType type;
+        
+        private ReferenceField(Field field)
+        {
+            super();
+            this.field = field;
+            this._const = Modifier.isFinal(field.getModifiers());
+        }
+        
+        @Override
+        public final KSLType getTypeOwner() { return KSLReference.this; }
+        
+        @Override
+        public final String getName() { return field.getName(); }
+
+        @Override
+        public final KSLType getType()
+        {
+            if(type != null)
+                return type;
+            try { return type = classLoader.findKSLType(field.getType()); }
+            catch(ClassNotFoundException ex) { throw new RuntimeException(ex); }
+        }
+
+        @Override
+        public final int getLocalReference() { return -1; }
+
+        @Override
+        public final boolean isLocal() { return false; }
+
+        @Override
+        public final boolean isField() { return true; }
+
+        @Override
+        public final boolean isConst() { return _const; }
+
+        @Override
+        public final boolean isInitiated() { return true; }
+    }
     
     
     private final class ReferenceMethod extends Function
@@ -98,7 +204,7 @@ public final class KSLReference extends KSLType
         public final KSLType getReturnType() { return returnType; }
 
         @Override
-        public String getScriptOwnerInstance() { return null; }
+        public Variable getScriptOwnerInstance() { return null; }
 
         @Override
         public final KSLType getTypeOwner() { return KSLReference.this; }
@@ -107,30 +213,9 @@ public final class KSLReference extends KSLType
     
     private final class ReferenceMethodParameter extends Function.Parameter
     {
-        private final String name;
-        private final KSLType type;
-        private final boolean varargs;
-        
         private ReferenceMethodParameter(java.lang.reflect.Parameter jpar) throws ClassNotFoundException
         {
-            this.name = jpar.getName();
-            this.type = classLoader.findKSLType(jpar.getType());
+            super(jpar.getName(), classLoader.findKSLType(jpar.getType()), jpar.isVarArgs());
         }
-        
-        @Override
-        public String getName() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public KSLType getType() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isVarargs() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-        
     }
 }

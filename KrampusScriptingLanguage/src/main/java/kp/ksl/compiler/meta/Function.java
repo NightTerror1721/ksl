@@ -5,6 +5,7 @@
  */
 package kp.ksl.compiler.meta;
 
+import java.util.Objects;
 import kp.ksl.compiler.types.KSLType;
 
 /**
@@ -17,20 +18,30 @@ public abstract class Function extends MetaObject
     
     public abstract Signature getSignature();
     public final String getName() { return getSignature().getName(); }
+    public String getJavaName() { return getSignature().getName(); }
     
     public abstract int getParameterCount();
     public abstract Parameter getParameter(int index);
     
     public abstract KSLType getReturnType();
     
-    public abstract String getScriptOwnerInstance();
+    public abstract Variable getScriptOwnerInstance();
     
-    public static abstract class Parameter
+    public static class Parameter
     {
-        protected Parameter() {}
+        protected final String name;
+        protected final KSLType type;
+        protected final boolean varargs;
         
-        public abstract String getName();
-        public abstract KSLType getType();
-        public abstract boolean isVarargs();
+        protected Parameter(String name, KSLType type, boolean varargs)
+        {
+            this.name = Objects.requireNonNull(name);
+            this.type = Objects.requireNonNull(type);
+            this.varargs = Objects.requireNonNull(varargs);
+        }
+        
+        public final String getName() { return name; }
+        public final KSLType getType() { return type; }
+        public final boolean isVarargs() { return varargs; }
     }
 }

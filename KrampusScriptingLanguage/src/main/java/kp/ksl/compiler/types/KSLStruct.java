@@ -38,9 +38,6 @@ public final class KSLStruct extends KSLType
     @Override
     public final Variable getField(String field) { return fields.get(field); }
     
-    @Override
-    public final int getFieldCount() { return fields.size(); }
-    
     
     public static final KSLStruct createStruct(Class<?> jclass, KSLClassLoader loader)
     {
@@ -67,13 +64,14 @@ public final class KSLStruct extends KSLType
     @Override
     public final boolean isManualAssignableFrom(KSLType type)
     {
-        return is(type) || type.getJavaClass().isAssignableFrom(jclass); 
+        return is(type) || (type.isStruct() &&
+                (jclass.isAssignableFrom(type.getJavaClass()) || type.getJavaClass().isAssignableFrom(jclass)));
     }
 
     @Override
     public final boolean isAutoAssignableFrom(KSLType type)
     {
-        return is(type) || type.isJavaObjectClass();
+        return is(type) || (type.isStruct() && jclass.isAssignableFrom(type.getJavaClass()));
     }
     
     
@@ -113,7 +111,7 @@ public final class KSLStruct extends KSLType
         public final boolean isLocal() { return false; }
 
         @Override
-        public final boolean isStatic() { return false; }
+        public final boolean isField() { return true; }
 
         @Override
         public final boolean isConst() { return false; }

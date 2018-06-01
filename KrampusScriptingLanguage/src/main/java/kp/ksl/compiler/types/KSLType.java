@@ -5,6 +5,7 @@
  */
 package kp.ksl.compiler.types;
 
+import java.util.Collection;
 import java.util.Objects;
 import kp.ksl.compiler.InstructionCode;
 import kp.ksl.compiler.InstructionCodeType;
@@ -50,17 +51,13 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     /* Field Options */
     public boolean isValidField(String field) { throw new UnsupportedOperationException(); }
     public Variable getField(String field) { throw new UnsupportedOperationException(); }
-    public int getFieldCount() { throw new UnsupportedOperationException(); }
     
-    /* Function Options */
-    public boolean isValidFunction(Signature signature) { throw new UnsupportedOperationException(); }
-    public Function getFunction(Signature signature) { throw new UnsupportedOperationException(); }
-    public final Function getReferenceMethod(Signature signature) throws CompilationError
-    {
-        Signature ms = signature.asMethodSignature();
-        if(ms == null)
-            throw new CompilationError("Expected an assignable");
-    }
+    /* Method Options */
+    public boolean isValidReferenceMethod(Signature signature) throws CompilationError { throw new UnsupportedOperationException(); }
+    public Function getReferenceMethod(Signature signature) throws CompilationError { throw new UnsupportedOperationException(); }
+    
+    /* Script Function Options */
+    public Collection<Function> getScriptFunctions() { throw new UnsupportedOperationException(); }
     
     
     /* Cast Operations */

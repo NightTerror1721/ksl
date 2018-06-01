@@ -61,12 +61,13 @@ public final class KSLArray extends KSLType
     @Override
     public final boolean isManualAssignableFrom(KSLType type)
     {
-        return isAutoAssignableFrom(type) || type.getJavaClass().isAssignableFrom(jclass);
+        return is(type) || (type.isArray() &&
+                (jclass.isAssignableFrom(type.getJavaClass()) || type.getJavaClass().isAssignableFrom(jclass)));
     }
 
     @Override
     public final boolean isAutoAssignableFrom(KSLType type)
     {
-        return jclass.isAssignableFrom(type.getJavaClass());
+        return is(type) || (type.isArray() && jclass.isAssignableFrom(type.getJavaClass()));
     }
 }

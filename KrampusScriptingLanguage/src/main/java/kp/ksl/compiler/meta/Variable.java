@@ -20,7 +20,7 @@ public abstract class Variable extends MetaObject
     public abstract int getLocalReference();
     
     public abstract boolean isLocal();
-    public abstract boolean isStatic();
+    public abstract boolean isField();
     public abstract boolean isConst();
     public abstract boolean isInitiated();
 }
