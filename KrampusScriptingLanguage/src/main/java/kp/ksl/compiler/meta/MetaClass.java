@@ -5,6 +5,8 @@
  */
 package kp.ksl.compiler.meta;
 
+import kp.ksl.compiler.exception.CompilationError;
+import kp.ksl.compiler.preprocessor.MacroRepository;
 import kp.ksl.compiler.types.KSLReference;
 import kp.ksl.compiler.types.KSLStruct;
 import kp.ksl.lang.KSLClassLoader;
@@ -39,15 +41,25 @@ public abstract class MetaClass
     public abstract boolean isKSLType();
     
     /* Field Options */
-    public abstract boolean isValidField(String field);
-    public abstract Variable getField(String field);
+    public abstract boolean isValidField(String field) throws CompilationError;
+    public abstract Variable getField(String field) throws CompilationError;
+    
+    /* Script Function Options */
+    public abstract boolean isValidScriptFunction(Signature signature) throws CompilationError;
+    public abstract Function getScriptFunction(Signature signature) throws CompilationError;
+    
+    /* Script Macros */
+    public abstract MacroRepository getMacros();
+    
+    /* Script Structs */
+    public abstract StructRepository getStructs();
     
     
     public static final MetaClass valueOf(Class<?> jclass, KSLClassLoader classLoader)
     {
         if(Struct.class.isAssignableFrom(jclass))
             return KSLStruct.createStruct(jclass, classLoader);
-        MetaClass mc = MetaScript.createMetaScript(jclass, classLoader);
+        MetaClass mc = CompiledMetaScript.createMetaScript(jclass, classLoader);
         return mc == null ? KSLReference.createReference(jclass, classLoader) : mc;
     }
 }

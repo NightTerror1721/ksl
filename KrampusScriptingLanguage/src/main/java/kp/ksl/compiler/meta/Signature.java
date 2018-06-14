@@ -59,4 +59,19 @@ public final class Signature
     {
         return Objects.equals(name, s.name) && Arrays.equals(pars, s.pars);
     }
+    
+    @Override
+    public final String toString()
+    {
+        StringBuilder sb = new StringBuilder(name);
+        if(pars.length > 0)
+        {
+            sb.append("(");
+            for(KSLType par : pars)
+                sb.append(par.toString()).append(", ");
+            sb.delete(sb.length() - 2, sb.length()).append(")");
+        }
+        else sb.append("()");
+        return sb.toString();
+    }
 }

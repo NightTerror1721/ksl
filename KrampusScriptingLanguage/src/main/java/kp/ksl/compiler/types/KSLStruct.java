@@ -8,6 +8,7 @@ package kp.ksl.compiler.types;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import kp.ksl.compiler.meta.MetaScript.ScriptReferenceField;
 import kp.ksl.compiler.meta.Variable;
 import kp.ksl.lang.KSLClassLoader;
 import kp.ksl.lang.Struct;
@@ -106,6 +107,9 @@ public final class KSLStruct extends KSLType
 
         @Override
         public final int getLocalReference() { return -1; }
+        
+        @Override
+        public final ScriptReferenceField getScriptOwnerInstance() { return null; }
 
         @Override
         public final boolean isLocal() { return false; }

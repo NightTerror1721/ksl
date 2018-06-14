@@ -5,7 +5,6 @@
  */
 package kp.ksl.compiler.types;
 
-import java.util.Collection;
 import java.util.Objects;
 import kp.ksl.compiler.InstructionCode;
 import kp.ksl.compiler.InstructionCodeType;
@@ -13,7 +12,9 @@ import kp.ksl.compiler.exception.CompilationError;
 import kp.ksl.compiler.meta.Function;
 import kp.ksl.compiler.meta.MetaClass;
 import kp.ksl.compiler.meta.Signature;
+import kp.ksl.compiler.meta.StructRepository;
 import kp.ksl.compiler.meta.Variable;
+import kp.ksl.compiler.preprocessor.MacroRepository;
 import kp.ksl.lang.KSLClassLoader;
 import org.apache.bcel.generic.Type;
 
@@ -49,7 +50,9 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     public KSLType getBaseType() { throw new UnsupportedOperationException(); }
     
     /* Field Options */
+    @Override
     public boolean isValidField(String field) { throw new UnsupportedOperationException(); }
+    @Override
     public Variable getField(String field) { throw new UnsupportedOperationException(); }
     
     /* Method Options */
@@ -57,7 +60,18 @@ public abstract class KSLType extends MetaClass implements InstructionCode
     public Function getReferenceMethod(Signature signature) throws CompilationError { throw new UnsupportedOperationException(); }
     
     /* Script Function Options */
-    public Collection<Function> getScriptFunctions() { throw new UnsupportedOperationException(); }
+    @Override
+    public final boolean isValidScriptFunction(Signature signature) throws CompilationError { throw new UnsupportedOperationException(); }
+    @Override
+    public final Function getScriptFunction(Signature signature) throws CompilationError { throw new UnsupportedOperationException(); }
+    
+    /* Script Macros */
+    @Override
+    public final MacroRepository getMacros() { throw new UnsupportedOperationException(); }
+    
+    /* Script Structs */
+    @Override
+    public final StructRepository getStructs() { throw new UnsupportedOperationException(); }
     
     
     /* Cast Operations */

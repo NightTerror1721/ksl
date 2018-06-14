@@ -5,114 +5,23 @@
  */
 package kp.ksl.compiler.meta;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import kp.ksl.lang.KSLClassLoader;
 import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.Type;
 
 /**
  *
  * @author Asus
  */
-public class MetaScript extends MetaClass
+public abstract class MetaScript extends MetaClass
 {
-    private final HashMap<String, Variable> fields = new HashMap<>();
-    private final HashMap<String, Function> funcs = new HashMap<>();
-    
-    private MetaScript(Class<?> jclass) { super(jclass.getName(), new ObjectType(jclass.getName()), jclass); }
-    
-    private static boolean isInstancePresent(Class<?> jclass, KSLScript a)
+    protected MetaScript(Class<?> jclass)
     {
-        try
-        {
-            Field field = jclass.getField(a.instanceName());
-            if(field == null)
-                return false;
-            if(field.getType() != jclass)
-                return false;
-            if(!Modifier.isStatic(field.getModifiers()) || !Modifier.isFinal(field.getModifiers()) ||
-                    !Modifier.isPublic(field.getModifiers()))
-                return false;
-            return field.get(null) != null;
-        }
-        catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) { return false; }
+        super(jclass.getName(), new ObjectType(jclass.getName()), jclass);
     }
     
-    private static MetaScript findMetaScriptCache(Class<?> jclass, KSLScript a)
+    public abstract class ScriptReferenceField
     {
-        try
-        {
-            Field field = jclass.getField(a.cacheName());
-            if(field == null)
-                return null;
-            if(field.getType() != MetaScript.class)
-                return null;
-            if(!Modifier.isStatic(field.getModifiers()) || !Modifier.isFinal(field.getModifiers()) ||
-                    !Modifier.isPublic(field.getModifiers()))
-                return null;
-            return (MetaScript) field.get(null);
-        }
-        catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) { return null; }
+        public abstract String getName();
+        public abstract Type getBcelType();
     }
-    
-    private static void setMetaScriptCache(Class<?> jclass, KSLScript a, MetaScript s)
-    {
-        try
-        {
-            Field field = jclass.getField(a.cacheName());
-            if(field == null)
-                return;
-            if(field.getType() != MetaScript.class)
-                return;
-            if(!Modifier.isStatic(field.getModifiers()) || !Modifier.isFinal(field.getModifiers()) ||
-                    !Modifier.isPublic(field.getModifiers()))
-                return;
-            field.set(null, s);
-        }
-        catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {}
-    }
-    
-    private static void findVariables(Class<?> jclass, MetaScript s)
-    {
-        for(Field field : jclass.getFields())
-        {
-            if(!Modifier.isStatic(field.getModifiers()))
-                continue;
-            
-        }
-    }
-    
-    private static void findFunctions(Class<?> jclass, MetaScript s)
-    {
-        
-    }
-    
-    public static final MetaScript createMetaScript(Class<?> jclass, KSLClassLoader classLoader)
-    {
-        if(!jclass.isAnnotationPresent(KSLScript.class))
-            return null;
-        KSLScript a = jclass.getAnnotation(KSLScript.class);
-        if(!isInstancePresent(jclass, a))
-            return null;
-        
-        MetaScript s = findMetaScriptCache(jclass, a);
-        if(s != null)
-            return s;
-        
-        s = new MetaScript(jclass);
-        findVariables(jclass, s);
-        findFunctions(jclass, s);
-        setMetaScriptCache(jclass, a, s);
-        
-        return s;
-    }
-
-    @Override
-    public final boolean isScript() { return true; }
-
-    @Override
-    public final boolean isKSLType() { return false; }
-    
-    
 }

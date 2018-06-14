@@ -15,7 +15,11 @@ import java.lang.annotation.Target;
 public @interface KSLScript
 {
     public static final String DEFAULT_CACHE_FIELD_NAME = "__metaclass";
+    public static final String INVALID_MACRO_REPOSITORY = "";
+    public static final String INVALID_STRUCT_REPOSITORY = "";
     
     String instanceName();
+    String macrosRepository() default INVALID_MACRO_REPOSITORY;
+    String structsRepository() default INVALID_STRUCT_REPOSITORY;
     String cacheName() default DEFAULT_CACHE_FIELD_NAME;
 }

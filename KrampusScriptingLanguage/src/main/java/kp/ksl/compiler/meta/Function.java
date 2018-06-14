@@ -25,8 +25,6 @@ public abstract class Function extends MetaObject
     
     public abstract KSLType getReturnType();
     
-    public abstract Variable getScriptOwnerInstance();
-    
     public static class Parameter
     {
         protected final String name;

@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import kp.ksl.compiler.exception.CompilationError;
 import kp.ksl.compiler.meta.Function;
+import kp.ksl.compiler.meta.MetaScript.ScriptReferenceField;
 import kp.ksl.compiler.meta.Signature;
 import kp.ksl.compiler.meta.Variable;
 import kp.ksl.lang.KSLClassLoader;
@@ -124,7 +125,7 @@ public final class KSLReference extends KSLType
     
     public static final KSLReference createReference(Class<?> javaClass, KSLClassLoader loader)
     {
-        return null;
+        return new KSLReference(javaClass, loader);
     }
     
     
@@ -160,6 +161,9 @@ public final class KSLReference extends KSLType
 
         @Override
         public final int getLocalReference() { return -1; }
+        
+        @Override
+        public final ScriptReferenceField getScriptOwnerInstance() { return null; }
 
         @Override
         public final boolean isLocal() { return false; }
@@ -204,7 +208,7 @@ public final class KSLReference extends KSLType
         public final KSLType getReturnType() { return returnType; }
 
         @Override
-        public Variable getScriptOwnerInstance() { return null; }
+        public ScriptReferenceField getScriptOwnerInstance() { return null; }
 
         @Override
         public final KSLType getTypeOwner() { return KSLReference.this; }
